@@ -39,6 +39,7 @@ if (car.coverImageId) {
         .getFileView(BUCKET_ID, car.coverImageId)
         .toString();
 }
+    console.log(car.coverImageId);
 
     return `
         <div class="col-xl-3 col-lg-4 col-md-6">
