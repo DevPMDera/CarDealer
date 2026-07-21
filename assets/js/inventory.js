@@ -1,3 +1,7 @@
+// =========================
+// Load Inventory
+// =========================
+
 async function loadCars() {
 
     try {
@@ -7,7 +11,17 @@ async function loadCars() {
             CARS_COLLECTION_ID
         );
 
-        console.log(response.documents);
+        console.log("Cars:", response.documents);
+
+        const inventoryContainer = document.getElementById("inventoryContainer");
+
+        inventoryContainer.innerHTML = "";
+
+        response.documents.forEach(car => {
+
+            inventoryContainer.innerHTML += createCarCard(car);
+
+        });
 
     } catch (error) {
 
@@ -17,13 +31,32 @@ async function loadCars() {
 
 }
 
+function createCarCard(car) {
+
+    return `
+        <div class="col-xl-3 col-lg-4 col-md-6">
+
+            <div class="product-card">
+
+                <img
+                    src="https://placehold.co/400x250?text=${car.make}"
+                    style="width:100%;height:220px;object-fit:cover;">
+
+                <div class="product-content">
+
+                    <h5>${car.make} ${car.model} ${car.year}</h5>
+
+                    <p>${car.location}</p>
+
+                    <strong>$${Number(car.price).toLocaleString()}</strong>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+}
+
 loadCars();
-
-
-const container = document.getElementById("inventoryContainer");
-
-console.log(container);
-
-const firstCar = response.documents[0];
-
-console.log(firstCar);
