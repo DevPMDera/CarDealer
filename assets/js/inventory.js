@@ -32,9 +32,13 @@ async function loadCars() {
 }
 
 function createCarCard(car) {
-    const imageUrl = car.coverImageId
-    ? storage.getFileView(BUCKET_ID, car.coverImageId)
-    : "assets/img/no-car.jpg";
+    let imageUrl = "assets/img/no-car.jpg";
+
+if (car.coverImageId) {
+    imageUrl = storage
+        .getFileView(BUCKET_ID, car.coverImageId)
+        .toString();
+}
 
     return `
         <div class="col-xl-3 col-lg-4 col-md-6">
