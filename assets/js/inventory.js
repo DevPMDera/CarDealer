@@ -1,4 +1,4 @@
-/** async function loadCars() {
+async function loadCars() {
 
     try {
 
@@ -17,9 +17,13 @@
 
 }
 
-loadCars(); **/
+loadCars();
 
 
 const container = document.getElementById("inventoryContainer");
 
 console.log(container);
+
+const firstCar = response.documents[0];
+
+console.log(firstCar);
