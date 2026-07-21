@@ -32,15 +32,21 @@ async function loadCars() {
 }
 
 function createCarCard(car) {
+    const imageUrl = storage.getFileView(
+    BUCKET_ID,
+    car.coverImageId
+);
+
+console.log(imageUrl);
 
     return `
         <div class="col-xl-3 col-lg-4 col-md-6">
 
             <div class="product-card">
 
-                <img
-                    src="https://placehold.co/400x250?text=${car.make}"
-                    style="width:100%;height:220px;object-fit:cover;">
+                <img src="${imageUrl}"
+     alt="${car.make}"
+     style="width:100%;height:220px;object-fit:cover;">
 
                 <div class="product-content">
 
