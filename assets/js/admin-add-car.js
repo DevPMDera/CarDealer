@@ -1,3 +1,14 @@
+const make = document.getElementById("make");
+const model = document.getElementById("model");
+const year = document.getElementById("year");
+const price = document.getElementById("price");
+const mileage = document.getElementById("mileage");
+const transmission = document.getElementById("transmission");
+const fuelType = document.getElementById("fuelType");
+const color = document.getElementById("color");
+const location = document.getElementById("location");
+const description = document.getElementById("description");
+
 const form = document.getElementById("carForm");
 
 form.addEventListener("submit", async (e) => {
