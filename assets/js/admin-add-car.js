@@ -1,33 +1,36 @@
 const form = document.getElementById("carForm");
 
-form.addEventListener("submit", async function (e) {
+form.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    console.log({
+    try {
 
-        make: make.value,
+        // Get the selected image
+        const file = document.getElementById("coverImage").files[0];
 
-        model: model.value,
+        let coverImageId = null;
 
-        year: year.value,
+        // Upload image if one was selected
+        if (file) {
 
-        price: price.value,
+            const uploadedFile = await storage.createFile(
+                BUCKET_ID,
+                Appwrite.ID.unique(),
+                file
+            );
 
-        mileage: mileage.value,
+            coverImageId = uploadedFile.$id;
 
-        location: location.value,
+            console.log("✅ Image uploaded!");
+            console.log(uploadedFile);
 
-        transmission: transmission.value,
+        }
 
-        fuelType: fuelType.value,
+    } catch (error) {
 
-        color: color.value,
+        console.error(error);
 
-        description: description.value,
-
-        coverImage: coverImage.files[0]
-
-    });
+    }
 
 });
