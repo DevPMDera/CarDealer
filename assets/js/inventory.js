@@ -1,45 +1,12 @@
-// =========================
-// Load Inventory
-// =========================
-
-async function loadCars() {
-
-    try {
-
-        const response = await databases.listDocuments(
-            DATABASE_ID,
-            CARS_COLLECTION_ID
-        );
-
-        console.log("Cars:", response.documents);
-
-        const inventoryContainer = document.getElementById("inventoryContainer");
-
-        inventoryContainer.innerHTML = "";
-
-        response.documents.forEach(car => {
-
-            inventoryContainer.innerHTML += createCarCard(car);
-
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-
-}
-
 function createCarCard(car) {
+
     let imageUrl = "assets/img/no-car.jpg";
 
-if (car.coverImageId) {
-    imageUrl = storage
-        .getFileView(BUCKET_ID, car.coverImageId)
-        .toString();
-}
-    console.log(car.coverImageId);
+    if (car.coverImageId) {
+        imageUrl = storage
+            .getFileView(BUCKET_ID, car.coverImageId)
+            .toString();
+    }
 
     return `
         <div class="col-xl-3 col-lg-4 col-md-6">
@@ -47,16 +14,27 @@ if (car.coverImageId) {
             <div class="product-card">
 
                 <img src="${imageUrl}"
-     alt="${car.make}"
-     style="width:100%;height:220px;object-fit:cover;">
+                    alt="${car.make}"
+                    style="width:100%;height:220px;object-fit:cover;">
 
                 <div class="product-content">
 
-                    <h5>${car.make} ${car.model} ${car.year}</h5>
+                    <h5>
+                        <a href="car-details.html?id=${car.$id}">
+                            ${car.make} ${car.model} ${car.year}
+                        </a>
+                    </h5>
 
                     <p>${car.location}</p>
 
-                    <strong>$${Number(car.price).toLocaleString()}</strong>
+                    <strong>₦${Number(car.price).toLocaleString()}</strong>
+
+                    <br><br>
+
+                    <a class="btn btn-primary"
+                       href="car-details.html?id=${car.$id}">
+                        View Details
+                    </a>
 
                 </div>
 
@@ -64,7 +42,4 @@ if (car.coverImageId) {
 
         </div>
     `;
-
 }
-
-loadCars();
