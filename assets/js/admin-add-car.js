@@ -62,6 +62,13 @@ alert("Vehicle added successfully!");
 
             console.log("✅ Image uploaded!");
             console.log(uploadedFile);
+            console.log({
+    make: make.value,
+    model: model.value,
+    year: year.value,
+    location: location.value,
+    description: description.value
+});
 
         }
 
