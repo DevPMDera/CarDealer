@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add Vehicle</title>
+</head>
+
+<body>
+
+    <h2>Add Vehicle</h2>
+
+    <form id="carForm">
+
+        <input type="text" id="make" placeholder="Make" required>
+
+        <input type="text" id="model" placeholder="Model" required>
+
+        <input type="number" id="year" placeholder="Year" required>
+
+        <input type="number" id="price" placeholder="Price" required>
+
+        <input type="number" id="mileage" placeholder="Mileage">
+
+        <input type="text" id="location" placeholder="Location">
+
+        <input type="text" id="fuelType" placeholder="Fuel Type">
+
+        <input type="text" id="transmission" placeholder="Transmission">
+
+        <input type="text" id="color" placeholder="Color">
+
+        <textarea id="description" placeholder="Description"></textarea>
+
+        <label>Cover Image</label>
+
+        <input
+            type="file"
+            id="coverImage"
+            accept="image/*">
+
+        <br><br>
+
+        <button type="submit">
+
+            Save Vehicle
+
+        </button>
+
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@17.0.0"></script>
+
+    <script src="assets/js/appwrite.js"></script>
+
+    <script src="assets/js/admin-add-car.js"></script>
+
+</body>
+
+</html>
