@@ -21,6 +21,33 @@ form.addEventListener("submit", async (e) => {
             );
 
             coverImageId = uploadedFile.$id;
+            await databases.createDocument(
+    DATABASE_ID,
+    CARS_COLLECTION_ID,
+    Appwrite.ID.unique(),
+    {
+        name: `${make.value} ${model.value} ${year.value}`,
+        make: make.value,
+        model: model.value,
+        year: Number(year.value),
+        price: Number(price.value),
+        mileage: Number(mileage.value),
+        transmission: transmission.value,
+        fuelType: fuelType.value,
+        color: color.value,
+        location: location.value,
+        status: "Available",
+        description: description.value,
+
+        coverImageId: coverImageId,
+
+        galleryImageIds: [],
+
+        featured: false
+    }
+);
+
+alert("Vehicle added successfully!");
 
             console.log("✅ Image uploaded!");
             console.log(uploadedFile);
