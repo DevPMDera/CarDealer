@@ -1,15 +1,24 @@
-const make = document.getElementById("make");
-const model = document.getElementById("model");
-const year = document.getElementById("year");
-const price = document.getElementById("price");
-const mileage = document.getElementById("mileage");
-const transmission = document.getElementById("transmission");
-const fuelType = document.getElementById("fuelType");
-const color = document.getElementById("color");
-const location = document.getElementById("location");
-const description = document.getElementById("description");
+// ==============================
+// Form Elements
+// ==============================
 
 const form = document.getElementById("carForm");
+
+const makeInput = document.getElementById("make");
+const modelInput = document.getElementById("model");
+const yearInput = document.getElementById("year");
+const priceInput = document.getElementById("price");
+const mileageInput = document.getElementById("mileage");
+const transmissionInput = document.getElementById("transmission");
+const fuelTypeInput = document.getElementById("fuelType");
+const colorInput = document.getElementById("color");
+const locationInput = document.getElementById("location");
+const descriptionInput = document.getElementById("description");
+const coverImageInput = document.getElementById("coverImage");
+
+// ==============================
+// Add Vehicle
+// ==============================
 
 form.addEventListener("submit", async (e) => {
 
@@ -17,12 +26,11 @@ form.addEventListener("submit", async (e) => {
 
     try {
 
-        // Get the selected image
-        const file = document.getElementById("coverImage").files[0];
-
         let coverImageId = null;
 
-        // Upload image if one was selected
+        const file = coverImageInput.files[0];
+
+        // Upload cover image
         if (file) {
 
             const uploadedFile = await storage.createFile(
@@ -32,49 +40,67 @@ form.addEventListener("submit", async (e) => {
             );
 
             coverImageId = uploadedFile.$id;
-            await databases.createDocument(
-    DATABASE_ID,
-    CARS_COLLECTION_ID,
-    Appwrite.ID.unique(),
-    {
-        name: `${make.value} ${model.value} ${year.value}`,
-        make: make.value,
-        model: model.value,
-        year: Number(year.value),
-        price: Number(price.value),
-        mileage: Number(mileage.value),
-        transmission: transmission.value,
-        fuelType: fuelType.value,
-        color: color.value,
-        location: location.value,
-        status: "Available",
-        description: description.value,
 
-        coverImageId: coverImageId,
-
-        galleryImageIds: [],
-
-        featured: false
-    }
-);
-
-alert("Vehicle added successfully!");
-
-            console.log("✅ Image uploaded!");
+            console.log("✅ Image Uploaded");
             console.log(uploadedFile);
-            console.log({
-    make: make.value,
-    model: model.value,
-    year: year.value,
-    location: location.value,
-    description: description.value
-});
 
         }
 
-    } catch (error) {
+        // Create database document
+
+        const newCar = await databases.createDocument(
+            DATABASE_ID,
+            CARS_COLLECTION_ID,
+            Appwrite.ID.unique(),
+            {
+                name: `${makeInput.value} ${modelInput.value} ${yearInput.value}`,
+
+                make: makeInput.value,
+
+                model: modelInput.value,
+
+                year: Number(yearInput.value),
+
+                price: Number(priceInput.value),
+
+                mileage: Number(mileageInput.value),
+
+                transmission: transmissionInput.value,
+
+                fuelType: fuelTypeInput.value,
+
+                color: colorInput.value,
+
+                location: locationInput.value,
+
+                status: "Available",
+
+                description: descriptionInput.value,
+
+                coverImageId: coverImageId,
+
+                galleryImageIds: coverImageId
+                    ? [coverImageId]
+                    : [],
+
+                featured: false
+            }
+        );
+
+        console.log("✅ Vehicle Added");
+        console.log(newCar);
+
+        alert("Vehicle added successfully!");
+
+        form.reset();
+
+    }
+
+    catch (error) {
 
         console.error(error);
+
+        alert(error.message);
 
     }
 
