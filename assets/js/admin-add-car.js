@@ -69,6 +69,8 @@ form.addEventListener("submit", async (e) => {
 
                 fuelType: fuelTypeInput.value,
 
+                vin: vin.value.trim(),
+
                 color: colorInput.value,
 
                 location: locationInput.value,
