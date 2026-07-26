@@ -2,17 +2,16 @@
 // Car Details Page
 // ======================================
 
-// Get car ID from URL
+// Get Car ID
 const params = new URLSearchParams(window.location.search);
 const carId = params.get("id");
 
-// Check if ID exists
+// Redirect if no ID
 if (!carId) {
     alert("Vehicle not found.");
     window.location.href = "inventory.html";
 }
 
-// Load vehicle
 async function loadCar() {
 
     try {
@@ -25,97 +24,171 @@ async function loadCar() {
 
         console.log(car);
 
-        // ===========================
-        // Basic Details
-        // ===========================
+        // ==========================
+        // Vehicle Information
+        // ==========================
 
         document.getElementById("carMake").textContent = car.make || "-";
         document.getElementById("carModel").textContent = car.model || "-";
         document.getElementById("carYear").textContent = car.year || "-";
         document.getElementById("carMileage").textContent =
             Number(car.mileage).toLocaleString() + " km";
-        document.getElementById("carVIN").textContent = car.vin || "-";
-        document.getElementById("carColor").textContent = car.color || "-";
-        document.getElementById("carFuelType").textContent = car.fuelType || "-";
+
+        document.getElementById("carVIN").textContent =
+            car.vin || "-";
+
+        document.getElementById("carColor").textContent =
+            car.color || "-";
+
+        document.getElementById("carFuelType").textContent =
+            car.fuelType || "-";
+
         document.getElementById("carTransmission").textContent =
             car.transmission || "-";
-        document.getElementById("carStatus").textContent = car.status || "-";
+
+        document.getElementById("carStatus").textContent =
+            car.status || "-";
+
         document.getElementById("carLocation").textContent =
             car.location || "-";
 
         document.getElementById("carPrice").textContent =
             "₦" + Number(car.price).toLocaleString();
 
-        // ===========================
-        // Page Title
-        // ===========================
+        const title =
+            `${car.make} ${car.model} ${car.year}`;
 
-        const title = `${car.make} ${car.model} ${car.year}`;
+        document.title = title;
 
         if (document.getElementById("carName")) {
             document.getElementById("carName").textContent = title;
         }
-
-        document.title = title;
-
-        // ===========================
-        // Description
-        // ===========================
 
         if (document.getElementById("carDescription")) {
             document.getElementById("carDescription").textContent =
                 car.description || "";
         }
 
-        // ===========================
-        // Main Image
-        // ===========================
+        // ===================================
+        // IMAGE GALLERY
+        // ===================================
+
+        const sliderWrapper = document.getElementById("galleryContainer");
+        const thumbnailContainer = document.getElementById("myTab5");
+
+        sliderWrapper.innerHTML = "";
+        thumbnailContainer.innerHTML = "";
+
+        // Put cover image first
+        const images = [];
 
         if (car.coverImageId) {
-
-            const imageUrl = storage
-                .getFileView(BUCKET_ID, car.coverImageId)
-                .toString();
-
-            const mainImage = document.getElementById("mainCarImage");
-
-            if (mainImage) {
-                mainImage.src = imageUrl;
-            }
-
+            images.push(car.coverImageId);
         }
 
-        // ===========================
-        // Gallery
-        // ===========================
-
-        const galleryContainer = document.getElementById("galleryContainer");
-
         if (
-            galleryContainer &&
             car.galleryImageIds &&
             car.galleryImageIds.length > 0
         ) {
+            images.push(...car.galleryImageIds);
+        }
 
-            galleryContainer.innerHTML = "";
+        images.forEach((imageId, index) => {
 
-            car.galleryImageIds.forEach((imageId) => {
+            const imageUrl = storage
+                .getFileView(BUCKET_ID, imageId)
+                .toString();
 
-                const imageUrl = storage
-                    .getFileView(BUCKET_ID, imageId)
-                    .toString();
+            // Main Slider
+            sliderWrapper.innerHTML += `
+                <div class="swiper-slide">
+                    <img src="${imageUrl}" alt="Vehicle">
+                </div>
+            `;
 
-                galleryContainer.innerHTML += `
-                    <div class="swiper-slide">
-                        <img src="${imageUrl}" alt="Vehicle">
-                    </div>
-                `;
+            // Thumbnail
+            thumbnailContainer.innerHTML += `
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link ${index === 0 ? "active" : ""}"
+                        type="button"
+                        data-index="${index}">
+                        <img
+                            src="${imageUrl}"
+                            style="
+                                width:120px;
+                                height:80px;
+                                object-fit:cover;
+                                border-radius:8px;
+                            ">
+                    </button>
+                </li>
+            `;
+
+        });
+
+        // ===================================
+        // Reinitialize Swiper
+        // ===================================
+
+        const gallerySwiper = new Swiper(".product-img-slider", {
+
+            slidesPerView: 1,
+
+            loop: false,
+
+            navigation: {
+
+                nextEl: ".product-stand-next",
+
+                prevEl: ".product-stand-prev"
+
+            }
+
+        });
+
+        // ===================================
+        // Thumbnail Click
+        // ===================================
+
+        document
+            .querySelectorAll("#myTab5 .nav-link")
+            .forEach(button => {
+
+                button.addEventListener("click", function () {
+
+                    const index =
+                        Number(this.dataset.index);
+
+                    gallerySwiper.slideTo(index);
+
+                    document
+                        .querySelectorAll("#myTab5 .nav-link")
+                        .forEach(btn =>
+                            btn.classList.remove("active"));
+
+                    this.classList.add("active");
+
+                });
 
             });
 
+        // Update Image Count
+
+        const count = document.querySelector(".number-of-img");
+
+        if (count) {
+
+            count.innerHTML = `
+                <img src="assets/img/home1/icon/gallery-icon-1.svg" alt="">
+                ${images.length}
+            `;
+
         }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(error);
 
