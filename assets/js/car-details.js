@@ -138,13 +138,10 @@ if (
 
             loop: false,
 
-            navigation: {
-
-                nextEl: ".product-stand-next",
-
-                prevEl: ".product-stand-prev"
-
-            }
+           navigation: {
+    nextEl: ".product-stand-prev",
+    prevEl: ".product-stand-next"
+}
 
         });
 
