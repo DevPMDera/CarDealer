@@ -13,8 +13,11 @@ const transmissionInput = document.getElementById("transmission");
 const fuelTypeInput = document.getElementById("fuelType");
 const colorInput = document.getElementById("color");
 const locationInput = document.getElementById("location");
+const vinInput = document.getElementById("vin");
 const descriptionInput = document.getElementById("description");
+
 const coverImageInput = document.getElementById("coverImage");
+const galleryImagesInput = document.getElementById("galleryImages");
 
 // ==============================
 // Add Vehicle
@@ -26,71 +29,134 @@ form.addEventListener("submit", async (e) => {
 
     try {
 
+        // ==================================
+        // COVER IMAGE
+        // ==================================
+
         let coverImageId = null;
 
-        const file = coverImageInput.files[0];
+        const coverFile = coverImageInput.files[0];
 
-        // Upload cover image
-        if (file) {
+        if (coverFile) {
 
-            const uploadedFile = await storage.createFile(
+            const uploadedCover = await storage.createFile(
                 BUCKET_ID,
                 Appwrite.ID.unique(),
-                file
+                coverFile
             );
 
-            coverImageId = uploadedFile.$id;
+            coverImageId = uploadedCover.$id;
 
-            console.log("✅ Image Uploaded");
-            console.log(uploadedFile);
-
+            console.log("✅ Cover image uploaded:", coverImageId);
         }
 
-        // Create database document
+
+        // ==================================
+        // GALLERY IMAGES
+        // ==================================
+
+        const galleryImageIds = [];
+
+        const galleryFiles = Array.from(
+            galleryImagesInput.files
+        );
+
+        // Maximum 7 gallery images
+        if (galleryFiles.length > 7) {
+
+            alert("You can upload a maximum of 7 gallery images.");
+
+            return;
+        }
+
+
+        // Upload gallery images one by one
+        for (const file of galleryFiles) {
+
+            const uploadedGalleryImage =
+                await storage.createFile(
+                    BUCKET_ID,
+                    Appwrite.ID.unique(),
+                    file
+                );
+
+            galleryImageIds.push(
+                uploadedGalleryImage.$id
+            );
+
+            console.log(
+                "✅ Gallery image uploaded:",
+                uploadedGalleryImage.$id
+            );
+        }
+
+
+        // ==================================
+        // CREATE DATABASE DOCUMENT
+        // ==================================
 
         const newCar = await databases.createDocument(
             DATABASE_ID,
             CARS_COLLECTION_ID,
             Appwrite.ID.unique(),
             {
-                name: `${makeInput.value} ${modelInput.value} ${yearInput.value}`,
 
-                make: makeInput.value,
+                name:
+                    `${makeInput.value} ${modelInput.value} ${yearInput.value}`,
 
-                model: modelInput.value,
+                make:
+                    makeInput.value,
 
-                year: Number(yearInput.value),
+                model:
+                    modelInput.value,
 
-                price: Number(priceInput.value),
+                year:
+                    Number(yearInput.value),
 
-                mileage: Number(mileageInput.value),
+                price:
+                    Number(priceInput.value),
 
-                transmission: transmissionInput.value,
+                mileage:
+                    Number(mileageInput.value),
 
-                fuelType: fuelTypeInput.value,
+                transmission:
+                    transmissionInput.value,
 
-                vin: vin.value.trim(),
+                fuelType:
+                    fuelTypeInput.value,
 
-                color: colorInput.value,
+                vin:
+                    vinInput.value.trim(),
 
-                location: locationInput.value,
+                color:
+                    colorInput.value,
 
-                status: "Available",
+                location:
+                    locationInput.value,
 
-                description: descriptionInput.value,
+                status:
+                    "Available",
 
-                coverImageId: coverImageId,
+                description:
+                    descriptionInput.value,
 
-                galleryImageIds: coverImageId
-                    ? [coverImageId]
-                    : [],
+                // Cover image ONLY
+                coverImageId:
+                    coverImageId,
 
-                featured: false
+                // Gallery images ONLY
+                galleryImageIds:
+                    galleryImageIds,
+
+                featured:
+                    false
             }
         );
 
+
         console.log("✅ Vehicle Added");
         console.log(newCar);
+
 
         alert("Vehicle added successfully!");
 
