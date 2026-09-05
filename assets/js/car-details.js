@@ -136,48 +136,43 @@ sliderWrapper.innerHTML += `
 
         });
 
-        // ===================================
-        // Reinitialize Swiper
-        // ===================================
+// ===================================
+// Reinitialize Swiper
+// ===================================
 
-        const gallerySwiper = new Swiper(".product-img-slider", {
-
-            slidesPerView: 1,
-
-            loop: false,
-
-           navigation: {
-    nextEl: ".product-stand-prev",
-    prevEl: ".product-stand-next"
-}
-
-        });
-
-        // ===================================
-        // Thumbnail Click
-        // ===================================
-
-        document
-            .querySelectorAll("#myTab5 .nav-link")
-            .forEach(button => {
-
-                button.addEventListener("click", function () {
-
-                    const index =
-                        Number(this.dataset.index);
-
-                    gallerySwiper.slideTo(index);
-
-                    document
-                        .querySelectorAll("#myTab5 .nav-link")
-                        .forEach(btn =>
-                            btn.classList.remove("active"));
-
-                    this.classList.add("active");
-
-                });
-
+const gallerySwiper = new Swiper(".product-img-slider", {
+    slidesPerView: 1,
+    spaceBetween: 0,
+    loop: false,
+    observer: true,
+    observeParents: true,
+    observeSlideChildren: true,
+    navigation: {
+        nextEl: ".product-stand-prev",
+        prevEl: ".product-stand-next"
+    },
+    on: {
+        slideChange: function () {
+            const activeIndex = this.activeIndex;
+            document.querySelectorAll("#myTab5 .nav-link").forEach((button, index) => {
+                button.classList.toggle("active", index === activeIndex);
             });
+        }
+    }
+});
+
+// ===================================
+// Thumbnail Click
+// ===================================
+
+document.querySelectorAll("#myTab5 .nav-link").forEach((button) => {
+    button.addEventListener("click", function (e) {
+        e.preventDefault();
+        const index = Number(this.getAttribute("data-index"));
+        console.log("Thumbnail clicked:", index);
+        gallerySwiper.slideTo(index);
+    });
+});
 
         // Update Image Count
 
