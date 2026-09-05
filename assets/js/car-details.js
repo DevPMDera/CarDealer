@@ -101,11 +101,19 @@ if (
                 .toString();
 
             // Main Slider
-            sliderWrapper.innerHTML += `
-                <div class="swiper-slide">
-                    <img src="${imageUrl}" alt="Vehicle">
-                </div>
-            `;
+sliderWrapper.innerHTML += `
+    <div class="swiper-slide">
+        <img 
+            src="${imageUrl}" 
+            alt="Vehicle"
+            style="
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            "
+        >
+    </div>
+`;
 
             // Thumbnail
             thumbnailContainer.innerHTML += `
