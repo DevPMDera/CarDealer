@@ -69,29 +69,30 @@ async function loadCar() {
                 car.description || "";
         }
 
-        // ===================================
-        // IMAGE GALLERY
-        // ===================================
+// ===================================
+// IMAGE GALLERY
+// ===================================
 
-        const sliderWrapper = document.getElementById("galleryContainer");
-        const thumbnailContainer = document.getElementById("myTab5");
+const sliderWrapper =
+    document.getElementById("galleryContainer");
 
-        sliderWrapper.innerHTML = "";
-        thumbnailContainer.innerHTML = "";
+const thumbnailContainer =
+    document.getElementById("myTab5");
 
-        // Put cover image first
-        const images = [];
+sliderWrapper.innerHTML = "";
+thumbnailContainer.innerHTML = "";
 
-        if (car.coverImageId) {
-            images.push(car.coverImageId);
-        }
+// Gallery images ONLY
+const images = [];
 
-        if (
-            car.galleryImageIds &&
-            car.galleryImageIds.length > 0
-        ) {
-            images.push(...car.galleryImageIds);
-        }
+if (
+    car.galleryImageIds &&
+    car.galleryImageIds.length > 0
+) {
+
+    images.push(...car.galleryImageIds);
+
+}
 
         images.forEach((imageId, index) => {
 
