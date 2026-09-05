@@ -168,9 +168,17 @@ const gallerySwiper = new Swiper(".product-img-slider", {
 document.querySelectorAll("#myTab5 .nav-link").forEach((button) => {
     button.addEventListener("click", function (e) {
         e.preventDefault();
+
         const index = Number(this.getAttribute("data-index"));
-        console.log("Thumbnail clicked:", index);
-        gallerySwiper.slideTo(index);
+        const swiperElement = document.querySelector(".product-img-slider");
+
+        swiperElement.swiper.slideTo(index);
+
+        document.querySelectorAll("#myTab5 .nav-link").forEach((btn) => {
+            btn.classList.remove("active");
+        });
+
+        this.classList.add("active");
     });
 });
 
