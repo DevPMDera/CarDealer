@@ -21,37 +21,65 @@ async function loadCars() {
         const params = new URLSearchParams(window.location.search);
         const urlBrand = params.get("brand");
         const urlModel = params.get("model");
-        const brandFilter = document.getElementById("brandFilter");
+        const urlBudget = params.get("budget");
 
-        if (urlBrand && brandFilter) {
-            const matchingOption = [...brandFilter.options].find(option =>
-                option.value.toLowerCase() === urlBrand.toLowerCase()
-            );
-            if (matchingOption) {
-                brandFilter.value = matchingOption.value;
+        const brandFilter = document.getElementById("brandFilter");
+        const modelFilter = document.getElementById("modelFilter");
+        const budgetFilter = document.getElementById("budgetFilter");
+
+        // Set Brand dropdown
+        if (brandFilter) {
+            if (urlBrand) {
+                const matchingBrand = [...brandFilter.options].find(option =>
+                    option.value.toLowerCase() === urlBrand.toLowerCase()
+                );
+
+                if (matchingBrand) {
+                    brandFilter.value = matchingBrand.value;
+                }
+            } else {
+                brandFilter.value = "";
             }
         }
 
+        // Build Model dropdown based on selected Brand
+        if (modelFilter) {
+            const models = [...new Set(
+                response.documents
+                    .filter(car =>
+                        !urlBrand ||
+                        (car.make && car.make.trim().toLowerCase() === urlBrand.trim().toLowerCase())
+                    )
+                    .map(car => car.model)
+                    .filter(Boolean)
+            )];
+
+            modelFilter.innerHTML = `<option value="">All Models</option>`;
+
+            models.forEach(model => {
+                modelFilter.innerHTML += `<option value="${model}">${model}</option>`;
+            });
+
+            if (urlModel) {
+                const matchingModel = [...modelFilter.options].find(option =>
+                    option.value.toLowerCase() === urlModel.toLowerCase()
+                );
+
+                if (matchingModel) {
+                    modelFilter.value = matchingModel.value;
+                }
+            }
+        }
+
+        // Set Budget dropdown
+        if (budgetFilter && urlBudget) {
+            budgetFilter.value = urlBudget;
+        }
+
+        // Start with all cars
         let cars = response.documents;
-        const modelFilter = document.getElementById("modelFilter");
 
-if (modelFilter) {
-    const models = [...new Set(response.documents
-        .filter(car => !urlBrand || (car.make && car.make.trim().toLowerCase() === urlBrand.trim().toLowerCase()))
-        .map(car => car.model)
-        .filter(Boolean)
-    )];
-
-    modelFilter.innerHTML = `<option value="">All Models</option>`;
-
-    models.forEach(model => {
-        modelFilter.innerHTML += `<option value="${model}">${model}</option>`;
-    });
-}
-        if (urlModel) {
-    modelFilter.value = urlModel;
-}
-
+        // Filter by Brand
         if (urlBrand) {
             cars = cars.filter(car =>
                 car.make &&
@@ -59,12 +87,25 @@ if (modelFilter) {
             );
         }
 
+        // Filter by Model
         if (urlModel) {
-    cars = cars.filter(car =>
-        car.model &&
-        car.model.trim().toLowerCase() === urlModel.trim().toLowerCase()
-    );
-}
+            cars = cars.filter(car =>
+                car.model &&
+                car.model.trim().toLowerCase() === urlModel.trim().toLowerCase()
+            );
+        }
+
+        // Filter by Budget
+        if (urlBudget) {
+            const [minPrice, maxPrice] = urlBudget.split("-").map(Number);
+
+            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+                cars = cars.filter(car => {
+                    const price = Number(car.price);
+                    return price >= minPrice && price <= maxPrice;
+                });
+            }
+        }
 
         inventoryContainer.innerHTML = "";
 
@@ -72,7 +113,7 @@ if (modelFilter) {
             inventoryContainer.innerHTML = `
                 <div class="col-12 text-center">
                     <h3>No vehicles found.</h3>
-                    ${urlBrand ? `<p>No ${urlBrand} vehicles are currently available.</p>` : ""}
+                    <p>No vehicles match your selected filters.</p>
                 </div>
             `;
             return;
@@ -87,20 +128,7 @@ if (modelFilter) {
     }
 }
 
-document.querySelector(".product-search-area form").addEventListener("submit", function(event) {
-    event.preventDefault();
 
-    const brand = document.getElementById("brandFilter").value;
-    const model = document.getElementById("modelFilter").value;
-    const params = new URLSearchParams();
-
-    if (brand) params.set("brand", brand);
-    if (model) params.set("model", model);
-
-    window.location.href = params.toString()
-        ? `inventory.html?${params.toString()}`
-        : "inventory.html";
-});
 // ======================================
 // Create Car Card
 // ======================================
