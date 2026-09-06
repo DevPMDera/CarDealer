@@ -18,19 +18,25 @@ async function loadCars() {
             return;
         }
 
-        // Get brand from URL
         const params = new URLSearchParams(window.location.search);
-        const selectedBrand = params.get("brand");
+        const urlBrand = params.get("brand");
+        const brandFilter = document.getElementById("brandFilter");
 
-        console.log("Selected brand:", selectedBrand);
+        if (urlBrand && brandFilter) {
+            const matchingOption = [...brandFilter.options].find(option =>
+                option.value.toLowerCase() === urlBrand.toLowerCase()
+            );
+            if (matchingOption) {
+                brandFilter.value = matchingOption.value;
+            }
+        }
 
-        // Filter cars if a brand was selected
         let cars = response.documents;
 
-        if (selectedBrand) {
+        if (urlBrand) {
             cars = cars.filter(car =>
                 car.make &&
-                car.make.trim().toLowerCase() === selectedBrand.trim().toLowerCase()
+                car.make.trim().toLowerCase() === urlBrand.trim().toLowerCase()
             );
         }
 
@@ -40,7 +46,7 @@ async function loadCars() {
             inventoryContainer.innerHTML = `
                 <div class="col-12 text-center">
                     <h3>No vehicles found.</h3>
-                    ${selectedBrand ? `<p>No ${selectedBrand} vehicles are currently available.</p>` : ""}
+                    ${urlBrand ? `<p>No ${urlBrand} vehicles are currently available.</p>` : ""}
                 </div>
             `;
             return;
@@ -56,6 +62,18 @@ async function loadCars() {
 }
 
 
+
+document.querySelector(".product-search-area form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const brand = document.getElementById("brandFilter").value;
+
+    if (brand) {
+        window.location.href = `inventory.html?brand=${encodeURIComponent(brand)}`;
+    } else {
+        window.location.href = "inventory.html";
+    }
+});
 // ======================================
 // Create Car Card
 // ======================================
