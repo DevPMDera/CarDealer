@@ -147,6 +147,19 @@ document.querySelector(".product-search-area form").addEventListener("submit", f
         : "inventory.html";
 });
 
+const brandFilter = document.getElementById("brandFilter");
+const modelFilter = document.getElementById("modelFilter");
+
+if (brandFilter && modelFilter) {
+    brandFilter.addEventListener("focus", function() {
+        modelFilter.value = "";
+    });
+
+    brandFilter.addEventListener("change", function() {
+        modelFilter.value = "";
+    });
+}
+
 
 // ======================================
 // Create Car Card
