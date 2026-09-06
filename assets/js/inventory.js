@@ -129,6 +129,25 @@ async function loadCars() {
 }
 
 
+document.querySelector(".product-search-area form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const brand = document.getElementById("brandFilter").value;
+    const model = document.getElementById("modelFilter").value;
+    const budget = document.getElementById("budgetFilter").value;
+
+    const params = new URLSearchParams();
+
+    if (brand) params.set("brand", brand);
+    if (model) params.set("model", model);
+    if (budget) params.set("budget", budget);
+
+    window.location.href = params.toString()
+        ? `inventory.html?${params.toString()}`
+        : "inventory.html";
+});
+
+
 // ======================================
 // Create Car Card
 // ======================================
