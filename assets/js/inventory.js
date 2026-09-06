@@ -142,23 +142,12 @@ document.querySelector(".product-search-area form").addEventListener("submit", f
     if (model) params.set("model", model);
     if (budget) params.set("budget", budget);
 
-    window.location.href = params.toString()
+    const newUrl = params.toString()
         ? `inventory.html?${params.toString()}`
         : "inventory.html";
+
+    window.location.replace(newUrl);
 });
-
-const brandFilter = document.getElementById("brandFilter");
-const modelFilter = document.getElementById("modelFilter");
-
-if (brandFilter && modelFilter) {
-    brandFilter.addEventListener("focus", function() {
-        modelFilter.value = "";
-    });
-
-    brandFilter.addEventListener("change", function() {
-        modelFilter.value = "";
-    });
-}
 
 
 // ======================================
