@@ -80,12 +80,10 @@ if (urlModel) {
     }
 }
 
-        // Update models when brand changes
-if (brandFilter) {
-    brandFilter.addEventListener("change", function() {
-        updateModelDropdown(this.value);
-    });
-}
+// Update models when brand changes
+$(document).on("change", "#brandFilter", function() {
+    updateModelDropdown(this.value);
+});
 
         // Set Budget dropdown
         if (budgetFilter && urlBudget) {
