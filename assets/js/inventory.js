@@ -80,15 +80,32 @@ if (urlModel) {
     }
 }
 
-// Update models when brand changes
+// Update models and reset budget when brand changes
 $(document).on("change", "#brandFilter", function() {
     updateModelDropdown(this.value);
+
+    if (budgetFilter) {
+        budgetFilter.value = "";
+        $(budgetFilter).niceSelect("update");
+    }
 });
 
-        // Set Budget dropdown
-        if (budgetFilter && urlBudget) {
-            budgetFilter.value = urlBudget;
+       // Set Budget dropdown
+if (budgetFilter) {
+    if (urlBudget) {
+        const matchingBudget = [...budgetFilter.options].find(option =>
+            option.value === urlBudget
+        );
+
+        if (matchingBudget) {
+            budgetFilter.value = matchingBudget.value;
         }
+    } else {
+        budgetFilter.value = "";
+    }
+
+    $(budgetFilter).niceSelect("update");
+}
 
         // Start with all cars
         let cars = response.documents;
