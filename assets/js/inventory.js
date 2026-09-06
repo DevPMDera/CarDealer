@@ -3,9 +3,7 @@
 // ======================================
 
 async function loadCars() {
-
     try {
-
         const response = await databases.listDocuments(
             DATABASE_ID,
             CARS_COLLECTION_ID
@@ -20,33 +18,42 @@ async function loadCars() {
             return;
         }
 
+        // Get brand from URL
+        const params = new URLSearchParams(window.location.search);
+        const selectedBrand = params.get("brand");
+
+        console.log("Selected brand:", selectedBrand);
+
+        // Filter cars if a brand was selected
+        let cars = response.documents;
+
+        if (selectedBrand) {
+            cars = cars.filter(car =>
+                car.make &&
+                car.make.trim().toLowerCase() === selectedBrand.trim().toLowerCase()
+            );
+        }
+
         inventoryContainer.innerHTML = "";
 
-        if (response.documents.length === 0) {
-
+        if (cars.length === 0) {
             inventoryContainer.innerHTML = `
                 <div class="col-12 text-center">
-                    <h3>No vehicles available.</h3>
+                    <h3>No vehicles found.</h3>
+                    ${selectedBrand ? `<p>No ${selectedBrand} vehicles are currently available.</p>` : ""}
                 </div>
             `;
-
             return;
         }
 
-        response.documents.forEach(car => {
-
+        cars.forEach(car => {
             inventoryContainer.innerHTML += createCarCard(car);
-
         });
 
     } catch (error) {
-
         console.error("Error loading cars:", error);
-
     }
-
 }
-
 
 
 // ======================================
