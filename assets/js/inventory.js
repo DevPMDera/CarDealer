@@ -60,6 +60,8 @@ async function loadCars() {
                 modelFilter.innerHTML += `<option value="${model}">${model}</option>`;
             });
 
+            $(modelFilter).niceSelect("update");
+
             if (urlModel) {
                 const matchingModel = [...modelFilter.options].find(option =>
                     option.value.toLowerCase() === urlModel.toLowerCase()
