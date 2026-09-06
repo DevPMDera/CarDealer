@@ -32,6 +32,21 @@ async function loadCars() {
         }
 
         let cars = response.documents;
+        const modelFilter = document.getElementById("modelFilter");
+
+if (modelFilter) {
+    const models = [...new Set(response.documents
+        .filter(car => !urlBrand || (car.make && car.make.trim().toLowerCase() === urlBrand.trim().toLowerCase()))
+        .map(car => car.model)
+        .filter(Boolean)
+    )];
+
+    modelFilter.innerHTML = `<option value="">All Models</option>`;
+
+    models.forEach(model => {
+        modelFilter.innerHTML += `<option value="${model}">${model}</option>`;
+    });
+}
 
         if (urlBrand) {
             cars = cars.filter(car =>
