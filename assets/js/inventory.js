@@ -20,6 +20,7 @@ async function loadCars() {
 
         const params = new URLSearchParams(window.location.search);
         const urlBrand = params.get("brand");
+        const urlModel = params.get("model");
         const brandFilter = document.getElementById("brandFilter");
 
         if (urlBrand && brandFilter) {
@@ -47,6 +48,9 @@ if (modelFilter) {
         modelFilter.innerHTML += `<option value="${model}">${model}</option>`;
     });
 }
+        if (urlModel) {
+    modelFilter.value = urlModel;
+}
 
         if (urlBrand) {
             cars = cars.filter(car =>
@@ -54,6 +58,13 @@ if (modelFilter) {
                 car.make.trim().toLowerCase() === urlBrand.trim().toLowerCase()
             );
         }
+
+        if (urlModel) {
+    cars = cars.filter(car =>
+        car.model &&
+        car.model.trim().toLowerCase() === urlModel.trim().toLowerCase()
+    );
+}
 
         inventoryContainer.innerHTML = "";
 
@@ -76,18 +87,19 @@ if (modelFilter) {
     }
 }
 
-
-
 document.querySelector(".product-search-area form").addEventListener("submit", function(event) {
     event.preventDefault();
 
     const brand = document.getElementById("brandFilter").value;
+    const model = document.getElementById("modelFilter").value;
+    const params = new URLSearchParams();
 
-    if (brand) {
-        window.location.href = `inventory.html?brand=${encodeURIComponent(brand)}`;
-    } else {
-        window.location.href = "inventory.html";
-    }
+    if (brand) params.set("brand", brand);
+    if (model) params.set("model", model);
+
+    window.location.href = params.toString()
+        ? `inventory.html?${params.toString()}`
+        : "inventory.html";
 });
 // ======================================
 // Create Car Card
