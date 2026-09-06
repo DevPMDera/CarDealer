@@ -42,36 +42,50 @@ async function loadCars() {
             }
         }
 
-        // Build Model dropdown based on selected Brand
-        if (modelFilter) {
-            const models = [...new Set(
-                response.documents
-                    .filter(car =>
-                        !urlBrand ||
-                        (car.make && car.make.trim().toLowerCase() === urlBrand.trim().toLowerCase())
-                    )
-                    .map(car => car.model)
-                    .filter(Boolean)
-            )];
+      // Build Model dropdown based on selected Brand
+function updateModelDropdown(selectedBrand = "") {
+    if (!modelFilter) return;
 
-            modelFilter.innerHTML = `<option value="">All Models</option>`;
+    const models = [...new Set(
+        response.documents
+            .filter(car =>
+                !selectedBrand ||
+                (car.make && car.make.trim().toLowerCase() === selectedBrand.trim().toLowerCase())
+            )
+            .map(car => car.model)
+            .filter(Boolean)
+    )];
 
-            models.forEach(model => {
-                modelFilter.innerHTML += `<option value="${model}">${model}</option>`;
-            });
+    modelFilter.innerHTML = `<option value="">All Models</option>`;
 
-            $(modelFilter).niceSelect("update");
+    models.forEach(model => {
+        modelFilter.innerHTML += `<option value="${model}">${model}</option>`;
+    });
 
-            if (urlModel) {
-                const matchingModel = [...modelFilter.options].find(option =>
-                    option.value.toLowerCase() === urlModel.toLowerCase()
-                );
+    modelFilter.value = "";
 
-                if (matchingModel) {
-                    modelFilter.value = matchingModel.value;
-                }
-            }
-        }
+    $(modelFilter).niceSelect("update");
+}
+
+updateModelDropdown(urlBrand);
+
+if (urlModel) {
+    const matchingModel = [...modelFilter.options].find(option =>
+        option.value.toLowerCase() === urlModel.toLowerCase()
+    );
+
+    if (matchingModel) {
+        modelFilter.value = matchingModel.value;
+        $(modelFilter).niceSelect("update");
+    }
+}
+
+        // Update models when brand changes
+if (brandFilter) {
+    brandFilter.addEventListener("change", function() {
+        updateModelDropdown(this.value);
+    });
+}
 
         // Set Budget dropdown
         if (budgetFilter && urlBudget) {
