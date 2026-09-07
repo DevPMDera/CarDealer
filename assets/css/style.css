@@ -32,13 +32,18 @@
     height: 380px;
     overflow: hidden;
     background: #000;
+    position: relative;
 }
 
 .tiktok-card iframe {
-    width: 100%;
+    position: absolute;
+    width: 125%;
     height: 100%;
+    left: 0;
+    top: 0;
     border: 0;
 }
+
 /*================================================
 2. Global Css
 =================================================*/
