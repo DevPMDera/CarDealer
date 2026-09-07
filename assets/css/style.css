@@ -24482,3 +24482,38 @@ button {
 .range-wrapper2 .valus .min-value input::placeholder, .range-wrapper2 .valus .max-value input::placeholder {
   color: rgba(19, 20, 26, 0.5);
 }/*# sourceMappingURL=style.css.map */
+
+
+/* ======================================
+   Newly Listed Cars - Equal Card Sizes
+====================================== */
+
+#newly-listed-cars .swiper-slide {
+    height: auto;
+}
+
+#newly-listed-cars .product-card2 {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#newly-listed-cars .product-card2 .product-img {
+    width: 100%;
+    height: 230px;
+    overflow: hidden;
+}
+
+#newly-listed-cars .product-card2 .product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+#newly-listed-cars .product-card2 .product-content {
+    min-height: 105px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
