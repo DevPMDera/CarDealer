@@ -37,9 +37,9 @@
 
 .tiktok-card iframe {
     position: absolute;
-    width: 145% !important;
+    width: 150% !important;
     height: 115% !important;
-    left: -20% !important;
+    left: -18% !important;
     border: 0;
 }
 
