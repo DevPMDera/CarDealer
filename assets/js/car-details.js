@@ -242,6 +242,8 @@ if (reservationModal) {
 const continuePaymentBtn = document.getElementById("continuePaymentBtn");
 const reservationMessage = document.getElementById("reservationMessage");
 
+const PAYMENT_FUNCTION_URL = "https://devpmderagithubio.fra.appwrite.run/";
+
 if (continuePaymentBtn) {
     continuePaymentBtn.addEventListener("click", async () => {
         const customerName = document.getElementById("customerName").value.trim();
@@ -263,29 +265,129 @@ if (continuePaymentBtn) {
             return;
         }
 
-       reservationMessage.textContent = "Checking vehicle availability...";
+        continuePaymentBtn.disabled = true;
+        continuePaymentBtn.textContent = "Preparing Payment...";
+        reservationMessage.textContent = "Checking vehicle availability...";
 
-try {
-    const car = await databases.getDocument(
-        DATABASE_ID,
-        CARS_COLLECTION_ID,
-        carId
-    );
+        try {
+            const car = await databases.getDocument(
+                DATABASE_ID,
+                CARS_COLLECTION_ID,
+                carId
+            );
 
-    if (car.status !== "Available") {
-        reservationMessage.textContent = "Sorry, this vehicle has already been reserved.";
-        return;
-    }
+            if (car.status !== "Available") {
+                reservationMessage.textContent = "Sorry, this vehicle has already been reserved.";
+                continuePaymentBtn.disabled = false;
+                continuePaymentBtn.textContent = "Continue to Payment";
+                return;
+            }
 
-    console.log("Vehicle available:", car);
-    console.log("Customer:", customerName);
-    console.log("Email:", customerEmail);
-    console.log("Phone:", customerPhone);
+            reservationMessage.textContent = "Preparing secure payment...";
 
-    reservationMessage.textContent = "Vehicle available. Preparing payment...";
-} catch (error) {
-    console.error("Availability check failed:", error);
-    reservationMessage.textContent = "Unable to check vehicle availability. Please try again.";
-}
+            const initializeResponse = await fetch(PAYMENT_FUNCTION_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    action: "initialize",
+                    carId,
+                    customerName,
+                    customerEmail,
+                    customerPhone
+                })
+            });
+
+            const initializeData = await initializeResponse.json();
+
+            if (!initializeResponse.ok || !initializeData.success) {
+                throw new Error(
+                    initializeData.error || "Unable to initialize payment."
+                );
+            }
+
+            if (!initializeData.access_code) {
+                throw new Error("Payment access code was not returned.");
+            }
+
+            reservationMessage.textContent = "Opening secure payment...";
+
+            const popup = new PaystackPop();
+
+            popup.resumeTransaction(initializeData.access_code, {
+                onSuccess: async (transaction) => {
+                    reservationMessage.textContent = "Payment received. Confirming reservation...";
+
+                    try {
+                        const verifyResponse = await fetch(PAYMENT_FUNCTION_URL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                action: "verify",
+                                reference: transaction.reference
+                            })
+                        });
+
+                        const verifyData = await verifyResponse.json();
+
+                        if (!verifyResponse.ok || !verifyData.success) {
+                            throw new Error(
+                                verifyData.error || "Payment verification failed."
+                            );
+                        }
+
+                        reservationMessage.textContent =
+                            "Reservation confirmed! Check your email for confirmation.";
+
+                        continuePaymentBtn.textContent = "Reservation Confirmed";
+                        continuePaymentBtn.disabled = true;
+
+                        setTimeout(() => {
+                            reservationModal.style.display = "none";
+                            document.body.style.overflow = "";
+                        }, 3000);
+
+                    } catch (error) {
+                        console.error("Payment verification error:", error);
+
+                        reservationMessage.textContent =
+                            "Payment was received, but confirmation is still processing. Please contact the dealer.";
+
+                        continuePaymentBtn.disabled = false;
+                        continuePaymentBtn.textContent = "Try Again";
+                    }
+                },
+
+                onCancel: () => {
+                    reservationMessage.textContent =
+                        "Payment cancelled. Your vehicle has not been reserved.";
+
+                    continuePaymentBtn.disabled = false;
+                    continuePaymentBtn.textContent = "Continue to Payment";
+                },
+
+                onError: (error) => {
+                    console.error("Paystack error:", error);
+
+                    reservationMessage.textContent =
+                        "Unable to open payment. Please try again.";
+
+                    continuePaymentBtn.disabled = false;
+                    continuePaymentBtn.textContent = "Continue to Payment";
+                }
+            });
+
+        } catch (error) {
+            console.error("Reservation payment error:", error);
+
+            reservationMessage.textContent =
+                error.message || "Unable to start payment. Please try again.";
+
+            continuePaymentBtn.disabled = false;
+            continuePaymentBtn.textContent = "Continue to Payment";
+        }
     });
 }
