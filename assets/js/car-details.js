@@ -243,7 +243,7 @@ const continuePaymentBtn = document.getElementById("continuePaymentBtn");
 const reservationMessage = document.getElementById("reservationMessage");
 
 if (continuePaymentBtn) {
-    continuePaymentBtn.addEventListener("click", () => {
+    continuePaymentBtn.addEventListener("click", async () => {
         const customerName = document.getElementById("customerName").value.trim();
         const customerEmail = document.getElementById("customerEmail").value.trim();
         const customerPhone = document.getElementById("customerPhone").value.trim();
@@ -263,9 +263,29 @@ if (continuePaymentBtn) {
             return;
         }
 
-        reservationMessage.textContent = "Details accepted. Preparing payment...";
-        console.log("Customer:", customerName);
-        console.log("Email:", customerEmail);
-        console.log("Phone:", customerPhone);
+       reservationMessage.textContent = "Checking vehicle availability...";
+
+try {
+    const car = await databases.getDocument(
+        DATABASE_ID,
+        CARS_COLLECTION_ID,
+        carId
+    );
+
+    if (car.status !== "Available") {
+        reservationMessage.textContent = "Sorry, this vehicle has already been reserved.";
+        return;
+    }
+
+    console.log("Vehicle available:", car);
+    console.log("Customer:", customerName);
+    console.log("Email:", customerEmail);
+    console.log("Phone:", customerPhone);
+
+    reservationMessage.textContent = "Vehicle available. Preparing payment...";
+} catch (error) {
+    console.error("Availability check failed:", error);
+    reservationMessage.textContent = "Unable to check vehicle availability. Please try again.";
+}
     });
 }
