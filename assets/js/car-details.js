@@ -237,3 +237,35 @@ if (reservationModal) {
         }
     });
 }
+
+
+const continuePaymentBtn = document.getElementById("continuePaymentBtn");
+const reservationMessage = document.getElementById("reservationMessage");
+
+if (continuePaymentBtn) {
+    continuePaymentBtn.addEventListener("click", () => {
+        const customerName = document.getElementById("customerName").value.trim();
+        const customerEmail = document.getElementById("customerEmail").value.trim();
+        const customerPhone = document.getElementById("customerPhone").value.trim();
+
+        if (!customerName || !customerEmail || !customerPhone) {
+            reservationMessage.textContent = "Please fill in all fields.";
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+            reservationMessage.textContent = "Please enter a valid email address.";
+            return;
+        }
+
+        if (customerPhone.length < 7) {
+            reservationMessage.textContent = "Please enter a valid phone number.";
+            return;
+        }
+
+        reservationMessage.textContent = "Details accepted. Preparing payment...";
+        console.log("Customer:", customerName);
+        console.log("Email:", customerEmail);
+        console.log("Phone:", customerPhone);
+    });
+}
