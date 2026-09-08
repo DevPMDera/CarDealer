@@ -208,3 +208,32 @@ document.querySelectorAll("#myTab5 .nav-link").forEach((button) => {
 }
 
 loadCar();
+
+
+
+const reserveCarBtn = document.getElementById("reserveCarBtn");
+const reservationModal = document.getElementById("reservationModal");
+const closeReservation = document.getElementById("closeReservation");
+
+if (reserveCarBtn && reservationModal) {
+    reserveCarBtn.addEventListener("click", () => {
+        reservationModal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    });
+}
+
+if (closeReservation && reservationModal) {
+    closeReservation.addEventListener("click", () => {
+        reservationModal.style.display = "none";
+        document.body.style.overflow = "";
+    });
+}
+
+if (reservationModal) {
+    reservationModal.addEventListener("click", (event) => {
+        if (event.target === reservationModal) {
+            reservationModal.style.display = "none";
+            document.body.style.overflow = "";
+        }
+    });
+}
