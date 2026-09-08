@@ -84,14 +84,16 @@ if (urlModel) {
 }
 
 // Update models and reset budget when brand changes
-$(document).on("change", "#brandFilter", function() {
-    updateModelDropdown(this.value);
+$(document)
+    .off("change.inventory", "#brandFilter")
+    .on("change.inventory", "#brandFilter", function() {
+        updateModelDropdown(this.value);
 
-    if (budgetFilter) {
-        budgetFilter.value = "";
-        $(budgetFilter).niceSelect("update");
-    }
-});
+        if (budgetFilter) {
+            budgetFilter.value = "";
+            $(budgetFilter).niceSelect("update");
+        }
+    });
 
        // Set Budget dropdown
 if (budgetFilter) {
@@ -273,8 +275,31 @@ function createCarCard(car) {
 // Load Page
 // ======================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadCars();
 
-    loadCars();
+    // ======================================
+    // Appwrite Realtime Inventory Updates
+    // ======================================
+    try {
+        const realtime = new Appwrite.Realtime(client);
 
+        const unsubscribe = realtime.subscribe(
+            `tablesdb.${DATABASE_ID}.tables.${CARS_COLLECTION_ID}.rows`,
+            (response) => {
+                console.log("🔄 Inventory update received:", response.events);
+
+                // Reload the available-car list immediately.
+                loadCars();
+            }
+        );
+
+        console.log("✅ Live inventory updates enabled");
+
+        // Keep the subscription available for debugging if needed.
+        window.carInventoryRealtimeUnsubscribe = unsubscribe;
+
+    } catch (error) {
+        console.error("❌ Failed to enable live inventory updates:", error);
+    }
 });
