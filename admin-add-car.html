@@ -5,11 +5,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Vehicle</title>
+
+
+    <style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 40px 20px;
+    min-height: 100vh;
+    background: #f5f7fa;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+}
+
+#adminLogin,
+#adminPanel {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+}
+
+#adminLogin {
+    max-width: 450px;
+    margin-top: 80px;
+    text-align: center;
+}
+
+h2 {
+    margin: 0 0 25px;
+    font-size: 28px;
+    color: #111;
+}
+
+#adminLogin h2 {
+    margin-bottom: 30px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    background: #fff;
+    transition: 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #111;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+}
+
+textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 13px 22px;
+    background: #111;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+#sendOtpBtn,
+#verifyOtpBtn {
+    width: 100%;
+    margin-top: 15px;
+}
+
+#backToEmailBtn {
+    margin-top: 10px;
+    background: #e9ecef;
+    color: #222;
+}
+
+#backToEmailBtn:hover {
+    background: #dfe3e7;
+}
+
+#logoutBtn {
+    float: right;
+    margin-top: -55px;
+    background: #dc3545;
+}
+
+#logoutBtn:hover {
+    background: #b02a37;
+}
+
+#loginMessage {
+    margin-top: 20px;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+#adminPanel form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+#adminPanel form input,
+#adminPanel form textarea,
+#adminPanel form label,
+#adminPanel form button {
+    width: 100%;
+}
+
+#adminPanel form textarea {
+    grid-column: 1 / -1;
+}
+
+#adminPanel form input[type="file"] {
+    padding: 10px;
+    background: #f8f9fa;
+}
+
+#adminPanel form label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: -12px;
+}
+
+#adminPanel form button[type="submit"] {
+    grid-column: 1 / -1;
+    padding: 15px;
+    margin-top: 5px;
+}
+
+@media (max-width: 650px) {
+    body {
+        padding: 20px 12px;
+    }
+
+    #adminLogin,
+    #adminPanel {
+        padding: 25px 20px;
+    }
+
+    #adminLogin {
+        margin-top: 40px;
+    }
+
+    #adminPanel form {
+        grid-template-columns: 1fr;
+    }
+
+    #adminPanel form textarea,
+    #adminPanel form button[type="submit"] {
+        grid-column: auto;
+    }
+
+    #logoutBtn {
+        float: none;
+        margin: 0 0 25px;
+        width: 100%;
+    }
+}
+</style>
 </head>
 
 <body>
 
+<div id="adminLogin">
+    <h2>Admin Login</h2>
+
+    <div id="emailStep">
+        <input type="email" id="adminEmail" placeholder="Admin Email" required>
+        <button type="button" id="sendOtpBtn">Send OTP</button>
+    </div>
+
+    <div id="otpStep" style="display:none;">
+        <p>Enter the 6-digit code sent to your email.</p>
+        <input type="text" id="adminOtp" placeholder="6-digit OTP" maxlength="6" inputmode="numeric">
+        <button type="button" id="verifyOtpBtn">Verify OTP</button>
+        <button type="button" id="backToEmailBtn">Change Email</button>
+    </div>
+
+    <p id="loginMessage"></p>
+</div>
+
+<div id="adminPanel" style="display:none;">
+
     <h2>Add Vehicle</h2>
+
+    <button type="button" id="logoutBtn">Logout</button>
+
+    <br><br>
 
     <form id="carForm">
 
@@ -30,43 +235,37 @@
         <input type="text" id="color" placeholder="Color"><br><br>
 
         <input type="text" id="location" placeholder="Location"><br><br>
-        
+
         <input type="text" id="vin" placeholder="Enter VIN Number"><br><br>
 
-        <textarea
-            id="description"
-            placeholder="Vehicle Description"></textarea>
+        <textarea id="description" placeholder="Vehicle Description"></textarea>
 
         <br><br>
 
         <label>Cover Image</label><br>
 
-        <input
-            type="file"
-            id="coverImage"
-            accept="image/*">
+        <input type="file" id="coverImage" accept="image/*">
 
         <br><br>
 
         <label>Gallery Images (Maximum 7)</label>
-        
+
         <input type="file" id="galleryImages" accept="image/*" multiple>
 
         <br><br>
 
         <button type="submit">
-
             Save Vehicle
-
         </button>
 
     </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@17.0.0"></script>
+</div>
 
-    <script src="assets/js/appwrite.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/appwrite@17.0.0"></script>
+<script src="assets/js/appwrite.js"></script>
+<script src="assets/js/admin-add-car.js"></script>
 
-    <script src="assets/js/admin-add-car.js"></script>
 
 </body>
 
