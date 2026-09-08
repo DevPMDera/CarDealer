@@ -16,6 +16,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 const loginMessage = document.getElementById("loginMessage");
 
 let loginEmail = "";
+let loginUserId = "";
 
 function showMessage(message, error = false) {
     loginMessage.textContent = message;
@@ -61,12 +62,13 @@ sendOtpBtn.addEventListener("click", async () => {
     showMessage("Sending OTP...");
 
     try {
-        await account.createEmailToken(
+        const token = await account.createEmailToken(
             Appwrite.ID.unique(),
             email
         );
 
         loginEmail = email;
+        loginUserId = token.userId;
 
         emailStep.style.display = "none";
         otpStep.style.display = "block";
@@ -89,12 +91,17 @@ verifyOtpBtn.addEventListener("click", async () => {
         return;
     }
 
+    if (!loginUserId) {
+        showMessage("Please request a new OTP.", true);
+        return;
+    }
+
     verifyOtpBtn.disabled = true;
     showMessage("Verifying OTP...");
 
     try {
         await account.createSession(
-            loginEmail,
+            loginUserId,
             otp
         );
 
@@ -135,6 +142,7 @@ logoutBtn.addEventListener("click", async () => {
     adminEmail.value = "";
     adminOtp.value = "";
     loginEmail = "";
+    loginUserId = "";
     showMessage("You have been logged out.");
 });
 
