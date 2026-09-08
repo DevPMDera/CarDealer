@@ -242,7 +242,7 @@ if (reservationModal) {
 const continuePaymentBtn = document.getElementById("continuePaymentBtn");
 const reservationMessage = document.getElementById("reservationMessage");
 
-const PAYMENT_FUNCTION_URL = "https://devpmderagithubio.fra.appwrite.run/";
+const PAYMENT_FUNCTION_URL = "https://car-dealer-payment.appwrite.network/";
 
 if (continuePaymentBtn) {
     continuePaymentBtn.addEventListener("click", async () => {
