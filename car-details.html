@@ -1645,9 +1645,42 @@
                             <div class="single-contact" id="phoneNumber" data-phone="+990737621432">
                                 <a><i class='bx bx-phone-call'></i>Show Number</a>
                             </div>
-                            <div class="single-contact" id="emailAdress" data-email="info@gmail.com">
-                                <a><i class='bx bx-at'></i>Email Now</a>
-                            </div>
+                           <div class="single-contact" id="reserveCarBtn">
+                               <a href="javascript:void(0);">
+                                   <i class='bx bx-calendar-check'></i>Reserve Now</a>
+                           </div>
+
+                            <!--------------Reservation Form------------>
+
+                           <div class="reservation-modal" id="reservationModal">
+    <div class="reservation-form">
+        <button type="button" class="close-reservation" id="closeReservation">&times;</button>
+        <h3>Reserve This Vehicle</h3>
+        <p>Enter your details below to continue to payment.</p>
+        <div class="reservation-input">
+            <label for="customerName">Full Name</label>
+            <input type="text" id="customerName" placeholder="Enter your full name">
+        </div>
+        <div class="reservation-input">
+            <label for="customerEmail">Email Address</label>
+            <input type="email" id="customerEmail" placeholder="Enter your email address">
+        </div>
+        <div class="reservation-input">
+            <label for="customerPhone">Phone Number</label>
+            <input type="tel" id="customerPhone" placeholder="08012345678">
+        </div>
+        <div class="reservation-deposit">
+            <span>Reservation Deposit</span>
+            <strong>₦500,000</strong>
+        </div>
+        <button type="button" id="continuePaymentBtn">
+            Continue to Payment
+        </button>
+        <p id="reservationMessage"></p>
+    </div>
+</div>
+          
+                      
                             <div  class="single-contact" id="emailAdresss" data-whatsapp="+990737621432" data-emails="https://api.whatsapp.com/send?phone=990737621432&text=Hello this is the starting message">
                                 <a><i class='bx bxl-whatsapp'></i>Whatsapp</a>
                             </div>
