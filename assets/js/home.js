@@ -16,6 +16,7 @@ async function loadNewlyListedCars() {
             DATABASE_ID,
             CARS_COLLECTION_ID,
             [
+                Appwrite.Query.equal("status", "Available"),
                 Appwrite.Query.orderDesc("$createdAt"),
                 Appwrite.Query.limit(8)
             ]
