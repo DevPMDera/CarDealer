@@ -4,10 +4,13 @@
 
 async function loadCars() {
     try {
-        const response = await databases.listDocuments(
-            DATABASE_ID,
-            CARS_COLLECTION_ID
-        );
+       const response = await databases.listDocuments(
+    DATABASE_ID,
+    CARS_COLLECTION_ID,
+    [
+        Appwrite.Query.equal("status", "Available")
+    ]
+);
 
         console.log("Cars:", response.documents);
 
