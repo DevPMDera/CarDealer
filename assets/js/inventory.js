@@ -272,34 +272,36 @@ function createCarCard(car) {
 
 
 // ======================================
-// Load Page
+// Load Page + Appwrite Realtime
 // ======================================
-
 document.addEventListener("DOMContentLoaded", async () => {
     await loadCars();
 
-    // ======================================
-    // Appwrite Realtime Inventory Updates
-    // ======================================
     try {
         const realtime = new Appwrite.Realtime(client);
 
-        const unsubscribe = realtime.subscribe(
+        const subscription = await realtime.subscribe(
             `tablesdb.${DATABASE_ID}.tables.${CARS_COLLECTION_ID}.rows`,
             (response) => {
-                console.log("🔄 Inventory update received:", response.events);
+                console.log(
+                    "🔄 Inventory update received:",
+                    response.events,
+                    response.payload
+                );
 
-                // Reload the available-car list immediately.
+                // Reload inventory so Reserved cars disappear.
                 loadCars();
             }
         );
 
         console.log("✅ Live inventory updates enabled");
 
-        // Keep the subscription available for debugging if needed.
-        window.carInventoryRealtimeUnsubscribe = unsubscribe;
+        window.carInventoryRealtimeSubscription = subscription;
 
     } catch (error) {
-        console.error("❌ Failed to enable live inventory updates:", error);
+        console.error(
+            "❌ Failed to enable live inventory updates:",
+            error
+        );
     }
 });
