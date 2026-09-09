@@ -242,6 +242,82 @@ if (reservationModal) {
 const continuePaymentBtn = document.getElementById("continuePaymentBtn");
 const reservationMessage = document.getElementById("reservationMessage");
 
+// ======================================
+// Appwrite Realtime Car Updates
+// ======================================
+async function subscribeToCarUpdates() {
+    try {
+        const realtime = new Appwrite.Realtime(client);
+
+        const subscription = await realtime.subscribe(
+            `tablesdb.${DATABASE_ID}.tables.${CARS_COLLECTION_ID}.rows.${carId}`,
+            async (response) => {
+                console.log(
+                    "🔄 Car update received:",
+                    response.events,
+                    response.payload
+                );
+
+                const updatedCar = response.payload;
+
+                if (
+                    updatedCar &&
+                    updatedCar.status &&
+                    updatedCar.status !== "Available"
+                ) {
+                    console.log(
+                        "🚫 Vehicle is no longer available:",
+                        updatedCar.status
+                    );
+
+                    const statusElement =
+                        document.getElementById("carStatus");
+
+                    if (statusElement) {
+                        statusElement.textContent = updatedCar.status;
+                    }
+
+                    if (reserveCarBtn) {
+                        reserveCarBtn.disabled = true;
+                        reserveCarBtn.textContent = "Vehicle Reserved";
+                    }
+
+                    if (continuePaymentBtn) {
+                        continuePaymentBtn.disabled = true;
+                        continuePaymentBtn.textContent = "Vehicle Reserved";
+                    }
+
+                    if (reservationModal) {
+                        reservationModal.style.display = "none";
+                        document.body.style.overflow = "";
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = "inventory.html";
+                    }, 500);
+
+                    return;
+                }
+
+                await loadCar();
+            }
+        );
+
+        console.log("✅ Live car-details updates enabled");
+
+        window.carDetailsRealtimeSubscription = subscription;
+
+    } catch (error) {
+        console.error(
+            "❌ Failed to enable car-details Realtime:",
+            error
+        );
+    }
+}
+
+subscribeToCarUpdates();
+
+
 const PAYMENT_FUNCTION_URL = "https://car-dealer-payment.appwrite.network/";
 
 if (continuePaymentBtn) {
@@ -345,10 +421,9 @@ if (continuePaymentBtn) {
                         continuePaymentBtn.textContent = "Reservation Confirmed";
                         continuePaymentBtn.disabled = true;
 
-                        setTimeout(() => {
-                            reservationModal.style.display = "none";
-                            document.body.style.overflow = "";
-                        }, 3000);
+                       setTimeout(() => {
+    window.location.href = "inventory.html";
+}, 1000);
 
                     } catch (error) {
                         console.error("Payment verification error:", error);
