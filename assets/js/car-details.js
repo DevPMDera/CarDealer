@@ -436,23 +436,55 @@ if (continuePaymentBtn) {
                     }
                 },
 
-                onCancel: () => {
-                    reservationMessage.textContent =
-                        "Payment cancelled. Your vehicle has not been reserved.";
+                onCancel: async () => {
+    try {
+        await fetch(PAYMENT_FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action: "release",
+                carId,
+                reference: initializeData.reference
+            })
+        });
+    } catch (releaseError) {
+        console.error("Failed to release payment hold:", releaseError);
+    }
 
-                    continuePaymentBtn.disabled = false;
-                    continuePaymentBtn.textContent = "Continue to Payment";
-                },
+    reservationMessage.textContent =
+        "Payment cancelled. The vehicle is available again.";
 
-                onError: (error) => {
-                    console.error("Paystack error:", error);
+    continuePaymentBtn.disabled = false;
+    continuePaymentBtn.textContent = "Continue to Payment";
+},
 
-                    reservationMessage.textContent =
-                        "Unable to open payment. Please try again.";
+               onError: async (error) => {
+    console.error("Paystack error:", error);
 
-                    continuePaymentBtn.disabled = false;
-                    continuePaymentBtn.textContent = "Continue to Payment";
-                }
+    try {
+        await fetch(PAYMENT_FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action: "release",
+                carId,
+                reference: initializeData.reference
+            })
+        });
+    } catch (releaseError) {
+        console.error("Failed to release payment hold:", releaseError);
+    }
+
+    reservationMessage.textContent =
+        "Unable to open payment. The vehicle has been released. Please try again.";
+
+    continuePaymentBtn.disabled = false;
+    continuePaymentBtn.textContent = "Continue to Payment";
+},
             });
 
         } catch (error) {
