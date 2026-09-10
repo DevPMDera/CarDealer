@@ -569,7 +569,17 @@ activePaymentPopup = popup;
 
                onCancel: async () => {
     stopPaymentTimer();
-    activePaymentPopup = null;
+paymentExpired = false;
+activePaymentPopup = null;
+activePaymentReference = null;
+
+if (paymentCountdown) {
+    paymentCountdown.style.display = "none";
+}
+
+if (paymentTimer) {
+    paymentTimer.textContent = "05:00";
+}
                    
     try {
         await fetch(PAYMENT_FUNCTION_URL, {
@@ -595,8 +605,18 @@ activePaymentPopup = popup;
 },
 
                onError: async (error) => {
-    stopPaymentTimer();
-    activePaymentPopup = null;
+   stopPaymentTimer();
+paymentExpired = false;
+activePaymentPopup = null;
+activePaymentReference = null;
+
+if (paymentCountdown) {
+    paymentCountdown.style.display = "none";
+}
+
+if (paymentTimer) {
+    paymentTimer.textContent = "05:00";
+}
 
     console.error("Paystack error:", error);
 
