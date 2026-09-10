@@ -341,11 +341,13 @@ function renderVehicleTable() {
                 <td>${car.location || "—"}</td>
                 <td><span class="status-badge ${statusClass}">${car.status || "Unknown"}</span></td>
                 <td>${car.featured ? "Yes" : "No"}</td>
-                <td>
-                    <button type="button" class="edit-vehicle-btn" data-car-id="${car.$id}">Edit</button>
-                    <button type="button" class="reset-vehicle-btn" data-car-id="${car.$id}">Reset</button>
-                    <button type="button" class="delete-vehicle-btn" data-car-id="${car.$id}">Delete</button>
-                </td>
+                <td class="vehicle-actions">
+    ${car.status !== "Reserved" ? `
+        <button type="button" class="edit-vehicle-btn" data-car-id="${car.$id}">Edit</button>
+        <button type="button" class="reset-vehicle-btn" data-car-id="${car.$id}">Reset</button>
+    ` : ""}
+    <button type="button" class="delete-vehicle-btn" data-car-id="${car.$id}">Delete</button>
+</td>
             </tr>
         `;
     }).join("");
