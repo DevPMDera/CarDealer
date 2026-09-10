@@ -260,8 +260,38 @@ if (closeReservation && reservationModal) {
 }
 
 if (reservationModal) {
-    reservationModal.addEventListener("click", (event) => {
+    reservationModal.addEventListener("click", async (event) => {
         if (event.target === reservationModal) {
+            if (activePaymentReference && !paymentExpired) {
+                try {
+                    await fetch(PAYMENT_FUNCTION_URL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            action: "release",
+                            carId,
+                            reference: activePaymentReference
+                        })
+                    });
+                } catch (error) {
+                    console.error("Failed to release payment hold:", error);
+                }
+
+                stopPaymentTimer();
+                activePaymentPopup = null;
+                activePaymentReference = null;
+
+                if (paymentCountdown) {
+                    paymentCountdown.style.display = "none";
+                }
+
+                if (paymentTimer) {
+                    paymentTimer.textContent = "05:00";
+                }
+            }
+
             reservationModal.style.display = "none";
             document.body.style.overflow = "";
         }
