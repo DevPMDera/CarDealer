@@ -246,3 +246,138 @@ carForm.addEventListener("submit", async (e) => {
         alert(error.message || "Something went wrong.");
     }
 });
+
+
+const vehicleTableBody = document.getElementById("vehicleTableBody");
+const vehicleSearch = document.getElementById("vehicleSearch");
+const vehicleStatusFilter = document.getElementById("vehicleStatusFilter");
+
+let allVehicles = [];
+
+async function loadVehicles() {
+    if (!vehicleTableBody) {
+        return;
+    }
+
+    vehicleTableBody.innerHTML = `
+        <tr>
+            <td colspan="9" class="table-message">
+                Loading vehicles...
+            </td>
+        </tr>
+    `;
+
+    try {
+        const result = await databases.listDocuments(
+            DATABASE_ID,
+            CARS_COLLECTION_ID
+        );
+
+        allVehicles = result.documents || [];
+
+        renderVehicleTable();
+    } catch (error) {
+        console.error("Failed to load vehicles:", error);
+
+        vehicleTableBody.innerHTML = `
+            <tr>
+                <td colspan="9" class="table-message">
+                    Unable to load vehicles.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function renderVehicleTable() {
+    const searchTerm = vehicleSearch.value.trim().toLowerCase();
+    const selectedStatus = vehicleStatusFilter.value;
+
+    const filteredVehicles = allVehicles.filter(car => {
+        const vehicleName =
+            `${car.year || ""} ${car.make || ""} ${car.model || ""}`.toLowerCase();
+
+        const matchesSearch =
+            !searchTerm ||
+            vehicleName.includes(searchTerm) ||
+            String(car.vin || "").toLowerCase().includes(searchTerm) ||
+            String(car.location || "").toLowerCase().includes(searchTerm);
+
+        const matchesStatus =
+            selectedStatus === "all" ||
+            car.status === selectedStatus;
+
+        return matchesSearch && matchesStatus;
+    });
+
+    if (!filteredVehicles.length) {
+        vehicleTableBody.innerHTML = `
+            <tr>
+                <td colspan="9" class="table-message">
+                    No vehicles found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    vehicleTableBody.innerHTML = filteredVehicles.map(car => {
+        const statusClass =
+            car.status === "Available"
+                ? "status-available"
+                : car.status === "Reserved"
+                    ? "status-reserved"
+                    : car.status === "Payment Pending"
+                        ? "status-pending"
+                        : "status-other";
+
+        return `
+            <tr>
+                <td class="vehicle-name">
+                    ${car.year || ""} ${car.make || ""} ${car.model || ""}
+                </td>
+
+                <td>${car.year || "—"}</td>
+
+                <td>
+                    ₦${Number(car.price || 0).toLocaleString()}
+                </td>
+
+                <td>
+                    ${Number(car.mileage || 0).toLocaleString()} km
+                </td>
+
+                <td>${car.fuelType || "—"}</td>
+
+                <td>${car.location || "—"}</td>
+
+                <td>
+                    <span class="status-badge ${statusClass}">
+                        ${car.status || "Unknown"}
+                    </span>
+                </td>
+
+                <td>
+                    ${car.featured ? "Yes" : "No"}
+                </td>
+
+                <td>
+                    <button type="button">
+                        Edit
+                    </button>
+
+                    <button type="button">
+                        Reset
+                    </button>
+
+                    <button type="button">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+vehicleSearch.addEventListener("input", renderVehicleTable);
+vehicleStatusFilter.addEventListener("change", renderVehicleTable);
