@@ -1,4 +1,5 @@
 let editingCarId = null;
+const PAYMENT_FUNCTION_URL = "https://car-dealer-payment.appwrite.network/";
 const account = new Appwrite.Account(client);
 const teams = new Appwrite.Teams(client);
 const ADMIN_TEAM_ID = "6a9fd895001ca97364d4";
@@ -460,8 +461,63 @@ async function deleteVehicle(carId) {
     }
 }
 
+async function resetVehicle(carId) {
+    const car = allVehicles.find(vehicle => vehicle.$id === carId);
+    if (!car) {
+        alert("Vehicle not found.");
+        return;
+    }
+
+    const vehicleName = `${car.year || ""} ${car.make || ""} ${car.model || ""}`.trim();
+
+    if (car.status === "Available") {
+        alert(`${vehicleName} is already Available.`);
+        return;
+    }
+
+    const confirmed = confirm(
+        `Reset ${vehicleName} to Available?\n\nThis will release any active payment hold.`
+    );
+    if (!confirmed) return;
+
+    try {
+        const isAdmin = await checkAdminAccess();
+        if (!isAdmin) {
+            alert("Access denied.");
+            return;
+        }
+
+        const jwtResult = await account.createJWT();
+
+        const response = await fetch(PAYMENT_FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Appwrite-User-JWT": jwtResult.jwt
+            },
+            body: JSON.stringify({
+                action: "admin-reset",
+                carId
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Unable to reset vehicle.");
+        }
+
+        alert("Vehicle reset to Available successfully.");
+        await loadVehicles();
+    } catch (error) {
+        console.error("Failed to reset vehicle:", error);
+        alert(error.message || "Unable to reset vehicle.");
+    }
+}
+
 vehicleTableBody.addEventListener("click", async event => {
     const editButton = event.target.closest(".edit-vehicle-btn");
+    const resetButton = event.target.closest(".reset-vehicle-btn");
     const deleteButton = event.target.closest(".delete-vehicle-btn");
 
     if (editButton) {
@@ -469,9 +525,13 @@ vehicleTableBody.addEventListener("click", async event => {
         return;
     }
 
+    if (resetButton) {
+        await resetVehicle(resetButton.dataset.carId);
+        return;
+    }
+
     if (deleteButton) {
         await deleteVehicle(deleteButton.dataset.carId);
-        return;
     }
 });
 
