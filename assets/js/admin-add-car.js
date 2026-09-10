@@ -40,6 +40,7 @@ async function checkAdminAccess() {
 
         adminLogin.style.display = "none";
         adminPanel.style.display = "block";
+         await loadVehicles();
         console.log("✅ Admin authenticated:", user.email);
         return true;
 
