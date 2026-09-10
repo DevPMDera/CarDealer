@@ -260,44 +260,46 @@ async function subscribeToCarUpdates() {
 
                 const updatedCar = response.payload;
 
-                if (
-                    updatedCar &&
-                    updatedCar.status &&
-                    updatedCar.status !== "Available"
-                ) {
-                    console.log(
-                        "🚫 Vehicle is no longer available:",
-                        updatedCar.status
-                    );
+           if (
+    updatedCar &&
+    updatedCar.status &&
+    updatedCar.status === "Reserved"
+) {
+    console.log(
+        "🚫 Vehicle is no longer available:",
+        updatedCar.status
+    );
 
-                    const statusElement =
-                        document.getElementById("carStatus");
+    const statusElement =
+        document.getElementById("carStatus");
 
-                    if (statusElement) {
-                        statusElement.textContent = updatedCar.status;
-                    }
+    if (statusElement) {
+        statusElement.textContent = updatedCar.status;
+    }
 
-                    if (reserveCarBtn) {
-                        reserveCarBtn.disabled = true;
-                        reserveCarBtn.textContent = "Vehicle Reserved";
-                    }
+    if (reserveCarBtn) {
+        reserveCarBtn.disabled = true;
+        reserveCarBtn.textContent = "Vehicle Reserved";
+    }
 
-                    if (continuePaymentBtn) {
-                        continuePaymentBtn.disabled = true;
-                        continuePaymentBtn.textContent = "Vehicle Reserved";
-                    }
+    if (continuePaymentBtn) {
+        continuePaymentBtn.disabled = true;
+        continuePaymentBtn.textContent = "Vehicle Reserved";
+    }
 
-                    if (reservationModal) {
-                        reservationModal.style.display = "none";
-                        document.body.style.overflow = "";
-                    }
+    if (reservationModal) {
+        reservationModal.style.display = "none";
+        document.body.style.overflow = "";
+    }
 
-                    setTimeout(() => {
-                        window.location.href = "inventory.html";
-                    }, 500);
+    stopPaymentTimer();
 
-                    return;
-                }
+    setTimeout(() => {
+        window.location.href = "inventory.html";
+    }, 500);
+
+    return;
+}
 
                 await loadCar();
             }
@@ -319,6 +321,115 @@ subscribeToCarUpdates();
 
 
 const PAYMENT_FUNCTION_URL = "https://car-dealer-payment.appwrite.network/";
+
+const paymentCountdown = document.getElementById("paymentCountdown");
+const paymentTimer = document.getElementById("paymentTimer");
+
+let paymentTimerInterval = null;
+let paymentExpired = false;
+let activePaymentPopup = null;
+let activePaymentReference = null;
+
+function stopPaymentTimer() {
+    if (paymentTimerInterval) {
+        clearInterval(paymentTimerInterval);
+        paymentTimerInterval = null;
+    }
+}
+
+function startPaymentTimer(expiresAt) {
+    stopPaymentTimer();
+    paymentExpired = false;
+
+    const expiryTime = new Date(expiresAt).getTime();
+
+    if (!Number.isFinite(expiryTime)) {
+        console.error("Invalid payment expiry:", expiresAt);
+        return;
+    }
+
+    if (paymentCountdown) {
+        paymentCountdown.style.display = "block";
+    }
+
+    const updateTimer = async () => {
+        const remaining = Math.max(
+            0,
+            Math.ceil((expiryTime - Date.now()) / 1000)
+        );
+
+        const minutes = Math.floor(remaining / 60);
+        const seconds = remaining % 60;
+
+        if (paymentTimer) {
+            paymentTimer.textContent =
+                `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        }
+
+        if (remaining <= 0) {
+    stopPaymentTimer();
+    paymentExpired = true;
+
+    if (paymentCountdown) {
+        paymentCountdown.style.display = "none";
+    }
+
+    reservationMessage.textContent =
+        "Payment window expired. Releasing the vehicle...";
+
+    if (activePaymentPopup && typeof activePaymentPopup.cancelTransaction === "function") {
+        try {
+            activePaymentPopup.cancelTransaction(activePaymentReference);
+        } catch (error) {
+            console.error("Unable to close Paystack:", error);
+        }
+    }
+
+    activePaymentPopup = null;
+
+    try {
+        const expireResponse = await fetch(PAYMENT_FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action: "expire",
+                carId,
+                reference: activePaymentReference
+            })
+        });
+
+        const expireData = await expireResponse.json();
+
+        if (!expireResponse.ok) {
+            throw new Error(
+                expireData.error || "Unable to release the vehicle."
+            );
+        }
+
+        reservationMessage.textContent =
+            "Your 5-minute payment window has expired. The vehicle is available again.";
+
+        if (continuePaymentBtn) {
+            continuePaymentBtn.disabled = false;
+            continuePaymentBtn.textContent = "Continue to Payment";
+        }
+
+        activePaymentReference = null;
+
+    } catch (error) {
+        console.error("Payment expiry error:", error);
+
+        reservationMessage.textContent =
+            "The payment window expired, but we could not confirm the release. Please refresh the page.";
+    }
+}
+    };
+
+    updateTimer();
+    paymentTimerInterval = setInterval(updateTimer, 1000);
+}
 
 if (continuePaymentBtn) {
     continuePaymentBtn.addEventListener("click", async () => {
@@ -383,17 +494,37 @@ if (continuePaymentBtn) {
                 );
             }
 
-            if (!initializeData.access_code) {
-                throw new Error("Payment access code was not returned.");
-            }
+     if (!initializeData.access_code) {
+    throw new Error("Payment access code was not returned.");
+}
 
-            reservationMessage.textContent = "Opening secure payment...";
+if (!initializeData.expiresAt) {
+    throw new Error("Payment expiry time was not returned.");
+}
 
-            const popup = new PaystackPop();
+activePaymentReference = initializeData.reference;
+
+startPaymentTimer(initializeData.expiresAt);
+
+reservationMessage.textContent =
+    "Payment must be completed within 5 minutes.";
+
+const popup = new PaystackPop();
+activePaymentPopup = popup;
 
             popup.resumeTransaction(initializeData.access_code, {
-                onSuccess: async (transaction) => {
-                    reservationMessage.textContent = "Payment received. Confirming reservation...";
+               onSuccess: async (transaction) => {
+    stopPaymentTimer();
+    activePaymentPopup = null;
+
+    if (paymentExpired) {
+        reservationMessage.textContent =
+            "The payment window has expired. Your payment cannot reserve this vehicle.";
+        return;
+    }
+
+    reservationMessage.textContent =
+        "Payment received. Confirming reservation...";
 
                     try {
                         const verifyResponse = await fetch(PAYMENT_FUNCTION_URL, {
@@ -436,7 +567,10 @@ if (continuePaymentBtn) {
                     }
                 },
 
-                onCancel: async () => {
+               onCancel: async () => {
+    stopPaymentTimer();
+    activePaymentPopup = null;
+                   
     try {
         await fetch(PAYMENT_FUNCTION_URL, {
             method: "POST",
@@ -461,6 +595,9 @@ if (continuePaymentBtn) {
 },
 
                onError: async (error) => {
+    stopPaymentTimer();
+    activePaymentPopup = null;
+
     console.error("Paystack error:", error);
 
     try {
