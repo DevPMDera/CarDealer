@@ -389,11 +389,88 @@ function editVehicle(carId) {
     });
 }
 
-vehicleTableBody.addEventListener("click", event => {
+async function deleteVehicle(carId) {
+    const car = allVehicles.find(vehicle => vehicle.$id === carId);
+
+    if (!car) {
+        alert("Vehicle not found.");
+        return;
+    }
+
+    const vehicleName = `${car.year || ""} ${car.make || ""} ${car.model || ""}`.trim();
+
+    const confirmed = confirm(
+        `Are you sure you want to permanently delete ${vehicleName}?\n\nThis will also delete its stored images.`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const isAdmin = await checkAdminAccess();
+
+        if (!isAdmin) {
+            alert("Access denied.");
+            return;
+        }
+
+        const imageIds = [];
+
+        if (car.coverImageId) {
+            imageIds.push(car.coverImageId);
+        }
+
+        if (Array.isArray(car.galleryImageIds)) {
+            imageIds.push(...car.galleryImageIds);
+        }
+
+        for (const fileId of imageIds) {
+            try {
+                await storage.deleteFile(
+                    BUCKET_ID,
+                    fileId
+                );
+            } catch (error) {
+                console.error(
+                    "Failed to delete image:",
+                    fileId,
+                    error
+                );
+            }
+        }
+
+        await databases.deleteDocument(
+            DATABASE_ID,
+            CARS_COLLECTION_ID,
+            carId
+        );
+
+        alert("Vehicle deleted successfully.");
+
+        await loadVehicles();
+
+    } catch (error) {
+        console.error("Failed to delete vehicle:", error);
+
+        alert(
+            error.message ||
+            "Unable to delete vehicle."
+        );
+    }
+}
+
+vehicleTableBody.addEventListener("click", async event => {
     const editButton = event.target.closest(".edit-vehicle-btn");
+    const deleteButton = event.target.closest(".delete-vehicle-btn");
 
     if (editButton) {
         editVehicle(editButton.dataset.carId);
+        return;
+    }
+
+    if (deleteButton) {
+        await deleteVehicle(deleteButton.dataset.carId);
         return;
     }
 });
