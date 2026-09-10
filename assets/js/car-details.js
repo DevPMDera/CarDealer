@@ -223,7 +223,37 @@ if (reserveCarBtn && reservationModal) {
 }
 
 if (closeReservation && reservationModal) {
-    closeReservation.addEventListener("click", () => {
+    closeReservation.addEventListener("click", async () => {
+        if (activePaymentReference && !paymentExpired) {
+            try {
+                await fetch(PAYMENT_FUNCTION_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        action: "release",
+                        carId,
+                        reference: activePaymentReference
+                    })
+                });
+            } catch (error) {
+                console.error("Failed to release payment hold:", error);
+            }
+
+            stopPaymentTimer();
+            activePaymentPopup = null;
+            activePaymentReference = null;
+
+            if (paymentCountdown) {
+                paymentCountdown.style.display = "none";
+            }
+
+            if (paymentTimer) {
+                paymentTimer.textContent = "05:00";
+            }
+        }
+
         reservationModal.style.display = "none";
         document.body.style.overflow = "";
     });
@@ -329,6 +359,33 @@ let paymentTimerInterval = null;
 let paymentExpired = false;
 let activePaymentPopup = null;
 let activePaymentReference = null;
+
+window.addEventListener("pagehide", () => {
+    if (!activePaymentReference || paymentExpired) {
+        return;
+    }
+
+    stopPaymentTimer();
+
+    if (paymentCountdown) {
+        paymentCountdown.style.display = "none";
+    }
+
+    fetch(PAYMENT_FUNCTION_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        keepalive: true,
+        body: JSON.stringify({
+            action: "release",
+            carId,
+            reference: activePaymentReference
+        })
+    }).catch(error => {
+        console.error("Failed to release payment hold on page exit:", error);
+    });
+});
 
 function stopPaymentTimer() {
     if (paymentTimerInterval) {
@@ -546,13 +603,15 @@ activePaymentPopup = popup;
                             );
                         }
 
-                        reservationMessage.textContent =
-                            "Reservation confirmed! Check your email for confirmation.";
+                       reservationMessage.textContent =
+    "Reservation confirmed! Check your email for confirmation.";
 
-                        continuePaymentBtn.textContent = "Reservation Confirmed";
-                        continuePaymentBtn.disabled = true;
+continuePaymentBtn.textContent = "Reservation Confirmed";
+continuePaymentBtn.disabled = true;
 
-                       setTimeout(() => {
+activePaymentReference = null;
+
+setTimeout(() => {
     window.location.href = "inventory.html";
 }, 1000);
 
