@@ -489,14 +489,15 @@ async function resetVehicle(carId) {
             return;
         }
 
-        const jwtResult = await account.createJWT();
+       const jwtResult = await account.createJWT();
 
-        const response = await fetch(PAYMENT_FUNCTION_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Appwrite-User-JWT": jwtResult.jwt
-            },
+const response = await fetch(PAYMENT_FUNCTION_URL, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwtResult.jwt}`,
+        "X-Appwrite-User-JWT": jwtResult.jwt
+    },
             body: JSON.stringify({
                 action: "admin-reset",
                 carId
