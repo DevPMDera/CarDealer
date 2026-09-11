@@ -686,90 +686,47 @@ Active Preloader End
 	});
 
 	// most-search-slider
-	const tiktokSlider = document.querySelector(".home2-featured-slider");
-
-function loadTikTokSlide(slide) {
-    if (!slide) return;
-
-    const iframe = slide.querySelector("iframe[data-tiktok-src]");
-    if (!iframe || iframe.dataset.loaded === "true") return;
-
-    iframe.src = iframe.dataset.tiktokSrc;
-    iframe.dataset.loaded = "true";
-}
-
-function loadVisibleTikTokSlides(swiper) {
-    const slidesPerView = Math.ceil(Number(swiper.params.slidesPerView) || 1);
-
-    for (let i = swiper.activeIndex; i < swiper.activeIndex + slidesPerView; i++) {
-        loadTikTokSlide(swiper.slides[i]);
-    }
-}
-
-if (tiktokSlider) {
-    var tiktokSwiper = new Swiper(".home2-featured-slider", {
-        slidesPerView: 1,
-        speed: 1500,
-        spaceBetween: 25,
-        centerSlides: true,
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
+	var swiper = new Swiper(".home2-featured-slider", {
+    slidesPerView: 1,
+    speed: 1500,
+    spaceBetween: 25,
+    centerSlides: true,
+    autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+    },
+    navigation: {
+        nextEl: ".next-1",
+        prevEl: ".prev-1",
+    },
+    breakpoints: {
+        280: {
+            slidesPerView: 1
         },
-        navigation: {
-            nextEl: ".next-1",
-            prevEl: ".prev-1",
+        386: {
+            slidesPerView: 1
         },
-        breakpoints: {
-            280: {
-                slidesPerView: 1
-            },
-            386: {
-                slidesPerView: 1
-            },
-            576: {
-                slidesPerView: 2,
-                spaceBetween: 15
-            },
-            768: {
-                slidesPerView: 3,
-                spaceBetween: 15
-            },
-            992: {
-                slidesPerView: 3,
-                spaceBetween: 15
-            },
-            1200: {
-                slidesPerView: 4,
-                spaceBetween: 15
-            },
-            1400: {
-                slidesPerView: 4
-            }
+        576: {
+            slidesPerView: 2,
+            spaceBetween: 15
         },
-        on: {
-            init: function () {
-                loadVisibleTikTokSlides(this);
-            },
-            slideChange: function () {
-                loadVisibleTikTokSlides(this);
-            }
+        768: {
+            slidesPerView: 3,
+            spaceBetween: 15
+        },
+        992: {
+            slidesPerView: 3,
+            spaceBetween: 15
+        },
+        1200: {
+            slidesPerView: 4,
+            spaceBetween: 15
+        },
+        1400: {
+            slidesPerView: 4
         }
-    });
-
-    const tiktokObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (!entry.isIntersecting) return;
-
-            loadVisibleTikTokSlides(tiktokSwiper);
-            tiktokObserver.disconnect();
-        });
-    }, {
-        rootMargin: "600px 0px"
-    });
-
-    tiktokObserver.observe(tiktokSlider);
-}
+    }
+});
 	
 	// Recent Launch Slider
 	var swiper = new Swiper(".recent-launch-car-slider", {
