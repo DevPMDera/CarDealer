@@ -45,9 +45,12 @@
 }
 
 @media (max-width: 767px) {
-    .car-details-area {
-        padding-top: 10px !important;
-        margin-top: 0 !important;
+    .car-details-area > .container > .row:first-child {
+        margin-bottom: 0 !important;
+    }
+
+    .car-details-area > .container > .row:first-child .car-details-menu {
+        display: none !important;
     }
 }
 
