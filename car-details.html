@@ -1566,73 +1566,82 @@
                     </div>
                 </div>
 
+                
 
-                <div class="col-lg-4">
+
+               <div class="col-lg-4">
     <div class="car-details-sidebar">
 
-        <!-- Car Info Card -->
-        <div class="car-info-card" id="car-info">
+        <!-- Vehicle Summary Card -->
+        <div class="vehicle-summary-card">
 
-            <div class="car-info">
-                <div class="title mb-20">
-                    <h5>Car Info</h5>
+            <!-- Condition -->
+            <div class="vehicle-condition">
+                <span>•</span> USED
+            </div>
+
+            <!-- Vehicle Name -->
+            <h2 id="carName">Loading...</h2>
+
+            <!-- Vehicle Subtitle -->
+            <p class="vehicle-subtitle">
+                <span id="cardYear">Loading...</span>
+                <b>•</b>
+                <span id="cardFuelType">Loading...</span>
+                <b>•</b>
+                <span id="cardModel">Loading...</span>
+            </p>
+
+            <div class="vehicle-divider"></div>
+
+            <!-- Vehicle Specs -->
+            <div class="vehicle-specs">
+
+                <div class="vehicle-spec">
+                    <i class="bx bx-tachometer"></i>
+                    <div>
+                        <strong id="cardMileage">Loading...</strong>
+                        <span>km</span>
+                    </div>
                 </div>
 
-                <ul>
-                    <li>
-                        <div class="icon">
-                            <img src="assets/img/inner-page/icon/mileage.svg" alt="">
-                        </div>
-                        <div class="content">
-                            <h6>25,100 miles</h6>
-                            <span>Mileage</span>
-                        </div>
-                    </li>
+                <div class="vehicle-spec">
+                    <i class="bx bx-gas-pump"></i>
+                    <div>
+                        <strong id="cardFuel">Loading...</strong>
+                        <span>Fuel</span>
+                    </div>
+                </div>
 
-                    <li>
-                        <div class="icon">
-                            <img src="assets/img/inner-page/icon/engine.svg" alt="">
-                        </div>
-                        <div class="content">
-                            <h6>22,231 cc</h6>
-                            <span>Engine</span>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="icon">
-                            <img src="assets/img/inner-page/icon/fuel.svg" alt="">
-                        </div>
-                        <div class="content">
-                            <h6>Petrol + Gas</h6>
-                            <span>Fuel Type</span>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="icon">
-                            <img src="assets/img/inner-page/icon/condition.svg" alt="">
-                        </div>
-                        <div class="content">
-                            <h6>Used Car</h6>
-                            <span>Condition</span>
-                        </div>
-                    </li>
-                </ul>
-
-                <!-- Reserve Button -->
-                <div class="car-info-reserve">
-                    <button type="button" id="reserveCarBtn">
-                        <i class="bx bx-calendar-check"></i>
-                        Reserve Now
-                    </button>
+                <div class="vehicle-spec">
+                    <i class="bx bx-cog"></i>
+                    <div>
+                        <strong id="cardTransmission">Loading...</strong>
+                        <span>Transmission</span>
+                    </div>
                 </div>
 
             </div>
+
+            <div class="vehicle-divider"></div>
+
+            <!-- Price -->
+            <div class="vehicle-price">
+                <span>Our Price</span>
+                <h3 id="cardPrice">₦0</h3>
+            </div>
+
+            <!-- Reserve -->
+            <button type="button" id="reserveCarBtn" class="vehicle-reserve-btn">
+                <i class="bx bx-calendar-check"></i>
+                Reserve Now
+                <i class="bx bx-right-arrow-alt"></i>
+            </button>
+
         </div>
 
 
-        <!--------------Reservation Modal Form------------>
+        <!-------------- Reservation Modal Form ------------>
 
         <div class="reservation-modal" id="reservationModal">
             <div class="reservation-form">
@@ -1642,6 +1651,7 @@
                 </button>
 
                 <h3>Reserve This Vehicle</h3>
+
                 <p>Enter your details below to continue to payment.</p>
 
                 <div class="reservation-input">
@@ -1669,7 +1679,8 @@
                 </button>
 
                 <p id="paymentCountdown" style="display:none; margin-top:12px; font-weight:600;">
-                    Payment time remaining: <span id="paymentTimer">05:00</span>
+                    Payment time remaining:
+                    <span id="paymentTimer">05:00</span>
                 </p>
 
                 <p id="reservationMessage"></p>
@@ -1678,12 +1689,13 @@
         </div>
 
 
-        <!-- Contact Information -->
+        <!-- Keep your other sidebar content below the card -->
         <div class="contact-info mb-50">
 
-            <div class="single-contact" id="phoneNumber" data-phone="+990737621432">
+            <div class="single-contact" id="phoneNumber"
+                 data-phone="+990737621432">
                 <a>
-                    <i class='bx bx-phone-call'></i>
+                    <i class="bx bx-phone-call"></i>
                     Show Number
                 </a>
             </div>
@@ -1692,12 +1704,14 @@
                  data-whatsapp="+990737621432"
                  data-emails="https://api.whatsapp.com/send?phone=990737621432&text=Hello this is the starting message">
                 <a>
-                    <i class='bx bxl-whatsapp'></i>
+                    <i class="bx bxl-whatsapp"></i>
                     Whatsapp
                 </a>
             </div>
 
         </div>
+
+        
                         
                         <div class="inquiry-form mb-40">
                             <div class="title">
