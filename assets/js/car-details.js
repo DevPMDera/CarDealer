@@ -769,3 +769,26 @@ if (paymentTimer) {
         }
     });
 }
+
+// Move vehicle summary card above Overview on mobile
+function positionVehicleCard() {
+    const card = document.querySelector(".vehicle-summary-card");
+    const overview = document.querySelector("#overview");
+
+    if (!card || !overview) return;
+
+    const overviewContainer = overview.parentElement;
+
+    if (window.innerWidth <= 991) {
+        overviewContainer.parentElement.insertBefore(card, overviewContainer);
+    } else {
+        const sidebar = document.querySelector(".car-details-sidebar");
+
+        if (sidebar) {
+            sidebar.insertBefore(card, sidebar.firstElementChild);
+        }
+    }
+}
+
+positionVehicleCard();
+window.addEventListener("resize", positionVehicleCard);
