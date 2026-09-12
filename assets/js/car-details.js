@@ -776,23 +776,20 @@ if (paymentTimer) {
     });
 }
 
-// Move vehicle summary card above Overview on mobile
+// Position vehicle summary card
 function positionVehicleCard() {
     const card = document.querySelector(".vehicle-summary-card");
-    const overview = document.querySelector("#overview");
+    const thumbnails = document.querySelector("#myTab5");
+    const sidebar = document.querySelector(".car-details-sidebar");
 
-    if (!card || !overview) return;
-
-    const overviewContainer = overview.parentElement;
+    if (!card || !thumbnails || !sidebar) return;
 
     if (window.innerWidth <= 991) {
-        overviewContainer.parentElement.insertBefore(card, overviewContainer);
+        // Mobile: place card directly below thumbnails
+        thumbnails.parentElement.insertAdjacentElement("afterend", card);
     } else {
-        const sidebar = document.querySelector(".car-details-sidebar");
-
-        if (sidebar) {
-            sidebar.insertBefore(card, sidebar.firstElementChild);
-        }
+        // Desktop: keep card inside the right sidebar
+        sidebar.insertBefore(card, sidebar.firstElementChild);
     }
 }
 
