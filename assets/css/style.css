@@ -348,6 +348,13 @@
     }
 }
 
+#vehicle-description .description-content p {
+    color: #6b7280;
+    font-size: 15px;
+    line-height: 1.8;
+    margin: 0;
+}
+
 /*================================================
 2. Global Css
 =================================================*/
