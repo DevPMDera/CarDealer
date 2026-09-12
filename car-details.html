@@ -1276,7 +1276,8 @@
                             </div>
                         </div>
                         
-                        <div class="single-item mb-50" id="car-info">
+                        
+                        <!--<div class="single-item mb-50" id="car-info">
                             <div class="car-info">
                                 <div class="title mb-20">
                                     <h5>Car Info</h5>
@@ -1331,7 +1332,7 @@
     <button id="buyNowBtn" class="btn btn-primary" style="margin-left: 10px;">
         Buy Now
     </button>
-</div>
+</div>-->
 
                         <!--<div class="single-item mb-50" id="kye-features">
                             <div class="kye-features">
@@ -1564,58 +1565,140 @@
                         
                     </div>
                 </div>
-                
+
+
                 <div class="col-lg-4">
-                    <div class="car-details-sidebar">
-                        <div class="contact-info mb-50">
-                            <div class="single-contact" id="phoneNumber" data-phone="+990737621432">
-                                <a><i class='bx bx-phone-call'></i>Show Number</a>
-                            </div>
-                           <div class="single-contact" id="reserveCarBtn">
-                               <a href="javascript:void(0);">
-                                   <i class='bx bx-calendar-check'></i>Reserve Now</a>
-                           </div>
+    <div class="car-details-sidebar">
 
-                            <!--------------Reservation Modal Form------------>
+        <!-- Car Info Card -->
+        <div class="car-info-card" id="car-info">
 
-                           <div class="reservation-modal" id="reservationModal">
-    <div class="reservation-form">
-        <button type="button" class="close-reservation" id="closeReservation">&times;</button>
-        <h3>Reserve This Vehicle</h3>
-        <p>Enter your details below to continue to payment.</p>
-        <div class="reservation-input">
-            <label for="customerName">Full Name</label>
-            <input type="text" id="customerName" placeholder="Enter your full name">
-        </div>
-        <div class="reservation-input">
-            <label for="customerEmail">Email Address</label>
-            <input type="email" id="customerEmail" placeholder="Enter your email address">
-        </div>
-        <div class="reservation-input">
-            <label for="customerPhone">Phone Number</label>
-            <input type="tel" id="customerPhone" placeholder="08012345678">
-        </div>
-        <div class="reservation-deposit">
-            <span>Reservation Deposit</span>
-            <strong>₦50,000</strong>
-        </div>
- <button type="button" id="continuePaymentBtn">
-    Continue to Payment
-</button>
+            <div class="car-info">
+                <div class="title mb-20">
+                    <h5>Car Info</h5>
+                </div>
 
-<p id="paymentCountdown" style="display:none; margin-top:12px; font-weight:600;">
-    Payment time remaining: <span id="paymentTimer">05:00</span>
-</p>
-
-<p id="reservationMessage"></p>
-    </div>
-</div>
-          
-                      
-                            <div  class="single-contact" id="emailAdresss" data-whatsapp="+990737621432" data-emails="https://api.whatsapp.com/send?phone=990737621432&text=Hello this is the starting message">
-                                <a><i class='bx bxl-whatsapp'></i>Whatsapp</a>
-                            </div>
+                <ul>
+                    <li>
+                        <div class="icon">
+                            <img src="assets/img/inner-page/icon/mileage.svg" alt="">
                         </div>
+                        <div class="content">
+                            <h6>25,100 miles</h6>
+                            <span>Mileage</span>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="icon">
+                            <img src="assets/img/inner-page/icon/engine.svg" alt="">
+                        </div>
+                        <div class="content">
+                            <h6>22,231 cc</h6>
+                            <span>Engine</span>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="icon">
+                            <img src="assets/img/inner-page/icon/fuel.svg" alt="">
+                        </div>
+                        <div class="content">
+                            <h6>Petrol + Gas</h6>
+                            <span>Fuel Type</span>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="icon">
+                            <img src="assets/img/inner-page/icon/condition.svg" alt="">
+                        </div>
+                        <div class="content">
+                            <h6>Used Car</h6>
+                            <span>Condition</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- Reserve Button -->
+                <div class="car-info-reserve">
+                    <button type="button" id="reserveCarBtn">
+                        <i class="bx bx-calendar-check"></i>
+                        Reserve Now
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--------------Reservation Modal Form------------>
+
+        <div class="reservation-modal" id="reservationModal">
+            <div class="reservation-form">
+
+                <button type="button" class="close-reservation" id="closeReservation">
+                    &times;
+                </button>
+
+                <h3>Reserve This Vehicle</h3>
+                <p>Enter your details below to continue to payment.</p>
+
+                <div class="reservation-input">
+                    <label for="customerName">Full Name</label>
+                    <input type="text" id="customerName" placeholder="Enter your full name">
+                </div>
+
+                <div class="reservation-input">
+                    <label for="customerEmail">Email Address</label>
+                    <input type="email" id="customerEmail" placeholder="Enter your email address">
+                </div>
+
+                <div class="reservation-input">
+                    <label for="customerPhone">Phone Number</label>
+                    <input type="tel" id="customerPhone" placeholder="08012345678">
+                </div>
+
+                <div class="reservation-deposit">
+                    <span>Reservation Deposit</span>
+                    <strong>₦50,000</strong>
+                </div>
+
+                <button type="button" id="continuePaymentBtn">
+                    Continue to Payment
+                </button>
+
+                <p id="paymentCountdown" style="display:none; margin-top:12px; font-weight:600;">
+                    Payment time remaining: <span id="paymentTimer">05:00</span>
+                </p>
+
+                <p id="reservationMessage"></p>
+
+            </div>
+        </div>
+
+
+        <!-- Contact Information -->
+        <div class="contact-info mb-50">
+
+            <div class="single-contact" id="phoneNumber" data-phone="+990737621432">
+                <a>
+                    <i class='bx bx-phone-call'></i>
+                    Show Number
+                </a>
+            </div>
+
+            <div class="single-contact" id="emailAdresss"
+                 data-whatsapp="+990737621432"
+                 data-emails="https://api.whatsapp.com/send?phone=990737621432&text=Hello this is the starting message">
+                <a>
+                    <i class='bx bxl-whatsapp'></i>
+                    Whatsapp
+                </a>
+            </div>
+
+        </div>
+                        
                         <div class="inquiry-form mb-40">
                             <div class="title">
                                 <h4>To More inquiry </h4>
