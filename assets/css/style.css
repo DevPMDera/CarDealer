@@ -180,6 +180,174 @@
     background: #b90825;
 }
 
+.vehicle-summary-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.vehicle-condition {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
+    background: #eef4ff;
+    color: #2563eb;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 18px;
+}
+
+.vehicle-condition span {
+    font-size: 18px;
+    line-height: 0;
+}
+
+.vehicle-summary-card h2 {
+    color: #111827;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 10px;
+}
+
+.vehicle-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #374151;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.vehicle-subtitle b {
+    color: #9ca3af;
+}
+
+.vehicle-divider {
+    width: 100%;
+    height: 1px;
+    background: #e5e7eb;
+    margin: 22px 0;
+}
+
+.vehicle-specs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.vehicle-spec {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vehicle-spec > i {
+    color: #111827;
+    font-size: 24px;
+}
+
+.vehicle-spec div {
+    display: flex;
+    flex-direction: column;
+}
+
+.vehicle-spec strong {
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.vehicle-spec span {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.vehicle-price {
+    margin-bottom: 25px;
+}
+
+.vehicle-price > span {
+    display: block;
+    color: #374151;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.vehicle-price h3 {
+    color: #111827;
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.vehicle-reserve-btn {
+    width: 100%;
+    min-height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.vehicle-reserve-btn:hover {
+    background: #1d4ed8;
+}
+
+.vehicle-reserve-btn i:first-child {
+    font-size: 20px;
+}
+
+.vehicle-reserve-btn i:last-child {
+    font-size: 20px;
+}
+
+@media (max-width: 991px) {
+    .vehicle-summary-card {
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .vehicle-summary-card {
+        padding: 22px;
+    }
+
+    .vehicle-summary-card h2 {
+        font-size: 24px;
+    }
+
+    .vehicle-subtitle {
+        font-size: 14px;
+        gap: 7px;
+    }
+
+    .vehicle-specs {
+        gap: 8px;
+    }
+
+    .vehicle-spec {
+        gap: 6px;
+    }
+
+    .vehicle-spec > i {
+        font-size: 20px;
+    }
+}
+
 /*================================================
 2. Global Css
 =================================================*/
