@@ -355,6 +355,52 @@
     margin: 0;
 }
 
+
+
+@media (max-width: 767px) {
+
+    #myTab5 {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 10px;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        padding: 0 0 8px;
+        margin: 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #myTab5::-webkit-scrollbar {
+        display: none;
+    }
+
+    #myTab5 .nav-item {
+        flex: 0 0 auto;
+        margin: 0;
+    }
+
+    #myTab5 .nav-link {
+        flex: 0 0 auto;
+        width: 120px;
+        height: 80px;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    #myTab5 .nav-link img {
+        display: block;
+        width: 120px !important;
+        height: 80px !important;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+}
+
 /*================================================
 2. Global Css
 =================================================*/
