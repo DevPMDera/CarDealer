@@ -94,6 +94,12 @@ document.getElementById("cardPrice").textContent =
                 car.description || "";
         }
 
+        const descriptionElement = document.getElementById("carDescription");
+
+if (descriptionElement) {
+    descriptionElement.textContent = car.description || "No description available.";
+}
+
 // ===================================
 // IMAGE GALLERY
 // ===================================
