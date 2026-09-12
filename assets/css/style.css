@@ -44,6 +44,17 @@
     border: 0;
 }
 
+@media (max-width: 767px) {
+    .car-details-area {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .car-details-area > .container {
+        padding-top: 0 !important;
+    }
+}
+
 
 .reservation-modal{
     display:none;
