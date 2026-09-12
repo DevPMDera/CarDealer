@@ -146,6 +146,40 @@
     }
 }
 
+.car-info-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
+}
+
+.car-info-card .car-info {
+    margin-bottom: 0;
+}
+
+.car-info-reserve {
+    margin-top: 25px;
+}
+
+.car-info-reserve button {
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #d90a2c;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.car-info-reserve button:hover {
+    background: #b90825;
+}
+
 /*================================================
 2. Global Css
 =================================================*/
