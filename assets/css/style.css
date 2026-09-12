@@ -360,17 +360,19 @@
 @media (max-width: 767px) {
 
     #myTab5 {
-        display: flex;
-        flex-wrap: nowrap;
+        display: flex !important;
+        flex-wrap: nowrap !important;
         gap: 10px;
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
+        width: 100% !important;
+        max-width: 100%;
+        margin: 0 !important;
+        padding: 0 5px 8px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
         white-space: nowrap;
-        padding: 0 0 8px;
-        margin: 0;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
+        box-sizing: border-box;
     }
 
     #myTab5::-webkit-scrollbar {
@@ -378,24 +380,27 @@
     }
 
     #myTab5 .nav-item {
-        flex: 0 0 auto;
-        margin: 0;
+        flex: 0 0 auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     #myTab5 .nav-link {
-        flex: 0 0 auto;
-        width: 120px;
-        height: 80px;
-        padding: 0;
-        margin: 0;
-        border: 0;
-        background: transparent;
+        display: block !important;
+        width: 110px !important;
+        height: 75px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        box-sizing: border-box;
     }
 
     #myTab5 .nav-link img {
-        display: block;
-        width: 120px !important;
-        height: 80px !important;
+        display: block !important;
+        width: 110px !important;
+        height: 75px !important;
+        margin: 0 !important;
+        padding: 0 !important;
         object-fit: cover;
         border-radius: 8px;
     }
