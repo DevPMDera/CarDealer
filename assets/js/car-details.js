@@ -55,6 +55,31 @@ async function loadCar() {
         document.getElementById("carPrice").textContent =
             "₦" + Number(car.price).toLocaleString();
 
+        // ==========================
+// Vehicle Summary Card
+// ==========================
+
+document.getElementById("cardYear").textContent =
+    car.year || "-";
+
+document.getElementById("cardMileage").textContent =
+    Number(car.mileage).toLocaleString();
+
+document.getElementById("cardFuelType").textContent =
+    car.fuelType || "-";
+
+document.getElementById("cardModel").textContent =
+    car.model || "-";
+
+document.getElementById("cardFuel").textContent =
+    car.fuelType || "-";
+
+document.getElementById("cardTransmission").textContent =
+    car.transmission || "-";
+
+document.getElementById("cardPrice").textContent =
+    "₦" + Number(car.price).toLocaleString();
+
         const title =
             `${car.make} ${car.model} ${car.year}`;
 
